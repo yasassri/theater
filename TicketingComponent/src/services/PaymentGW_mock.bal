@@ -24,9 +24,7 @@ package src.services;
 //    "remarks": "From Paul"
 // }
 
-       
-        var id, _ = <int> eventID;
-        json jsonRes = ops:getTicketCountByEventId(id);
+        json jsonRes = {};
         res.setJsonPayload(jsonRes);
             _ = conn.respond(res);
         }
