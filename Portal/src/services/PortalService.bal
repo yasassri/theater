@@ -26,7 +26,6 @@ import src.serviceImpl as impl;
 
     resource addTickets (http:Connection conn,http:InRequest req) {
         http:OutResponse res = {};
-   
         _ = conn.respond(impl:handleAddTickets(req.getJsonPayload()));
         }
 

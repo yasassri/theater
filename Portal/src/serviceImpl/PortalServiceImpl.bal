@@ -18,38 +18,36 @@ public function hadleGetEvents ()(http:OutResponse res) {
 
 public function handleAddTickets (json jsonPayload)(http:OutResponse res) {
 
-    
+    res = {};
     var payLoad, err2 = <mod:AddEvent>jsonPayload;
-
-    io:println("errXXXXXXXXXXXXXX");
-        io:println(err2);
     
     // Now we need to extract event part from the Payload.
-   json event = {
-        "name": payLoad.name,
-        "start_time": payLoad.start_time,
-        "venue": payLoad.venue,
-        "organizer_name": payLoad.organizer_name,
-        "event_type": payLoad.event_type
-         };
+   json event = util:generateEventRequest(payLoad);
 
     // Extact ticket information
     var tickets = payLoad.tickets;
     
     // Add the event first
-    var resp = con:addEvent(event);
+    var resp, status = con:addEvent(event);
+
+    if(status > 400) {
+       res.setJsonPayload(resp);
+       res.statusCode = status;
+       return;
+    }
     // Now add the tickets.   
     foreach ticket in tickets) {
+        var i, err = <int>resp.id.toString();
+        ticket.eventId = i;
         var js, err = <json>ticket;
-
-        io:println("err");
-        io:println(err);
-        io:println(con:addTicket(js));
+        // IF error we need to revert the process
+        var addTicketres = con:addTicket(js);
     }
-    // To-DO: If ticket adding fails the event should be removed
+    // To-DO: If ticket adding fails the event should be rolled back
+    io:println(resp);
+    res.setJsonPayload(resp);
     return;
 }
-
 
 public function handlePurchaseTickets (json jsonPayload)(http:OutResponse res) {
  // Need to implement
