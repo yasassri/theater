@@ -19,6 +19,7 @@ public function hadleGetTicketsByEventId (int eventId)(http:OutResponse res) {
     return;
 }
 
+// Handle Ticket adding flow.
 public function handleAddTickets (json jsonPayload)(http:OutResponse res) {
 
     res = {};

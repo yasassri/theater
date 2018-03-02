@@ -14,16 +14,14 @@ string tableName = "EVENTS";
 //             "events_db", "root", "root", {maximumPoolSize:5});
 
 @http:configuration {
-    basePath:"/events"
+    basePath:"/events",
+    port:9093
 }
 service<http> eventsDataService {
-    // endpoint<sql:ClientConnector> testDB {
-    //       dbConnector;
-    //     }
 
     @http:resourceConfig {
         methods:["POST"],
-        path:"/"
+        path:"/add"
     }
     resource addEvent (http:Connection conn,http:InRequest req) {
         io:println(req.getJsonPayload());
@@ -33,7 +31,7 @@ service<http> eventsDataService {
 
     @http:resourceConfig {
         methods:["GET"],
-        path:"/getEvents"
+        path:"/get"
     }
     resource getAllEvent (http:Connection conn,http:InRequest req) {
         _ = conn.respond(impl:handleGetAllEventRequest(req));
@@ -41,60 +39,11 @@ service<http> eventsDataService {
 
     @http:resourceConfig {
         methods:["DELETE"],
-        path:"/{name}"
+        path:"/delete/{name}"
     }
-    resource deleEvent (http:Connection conn,http:InRequest req, string name) {
-        http:OutResponse res = {};
-        map params = req.getQueryParams();
-
-       // sql:Parameter para1 = {sqlType:sql:Type.VARCHAR, value:name};
-        //table dt = selectEventByName(para1);
-        // //var jsonRes, e = <json>dt;
-        // if (e != null) {
-        //     _ = conn.respond(errorToJson(e, res));
-        //     return;
-        // } else {
-        //     json jsonResponse;
-        //     if (jsonRes.toString().equalsIgnoreCase("[]")) {
-        //         jsonResponse = {"error" : name + " event does not exist."};
-        //         res.statusCode = 400;
-        //     } else {
-                // int ret = testDB.update("DELETE FROM "+tableName+" WHERE NAME = ?", [para1]);
-                // if (ret == 1) {
-                //     jsonResponse = {"success" : name + " event deleted successfully."};
-                //     res.statusCode = 200;
-                // } else {
-                //     jsonResponse = {"error" : name + " event could not be deleted."};
-                //     res.statusCode = 400;
-                // }
-                
-            // }
-            json jsonResponse = "";
-            res.setJsonPayload(jsonResponse);
-            _ = conn.respond(res);
-        // }
+    resource deleteEvent (http:Connection conn,http:InRequest req, string name) {
+        // Need to implement
     }
     
 }
 
-// function selectEventByName (sql:Parameter para1)(table) {
-//     // endpoint<sql:ClientConnector> testDB {
-//     //       dbConnector;
-//     //     }
-
-//     return testDB.select("SELECT * FROM "+tableName+" WHERE NAME = ?", [para1], null);
-// }
-
-function errorToJson (error e, http:OutResponse res) (http:OutResponse) {
-            var jsonError, _ = <json> e;
-            res.setJsonPayload(jsonError);
-            res.statusCode = 400;
-            return res;
-}
-
-
-
-
-function name (any a, any b) {
-    
-}

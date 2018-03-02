@@ -7,6 +7,7 @@ const string tableName = "events";
 
 const string getAllEventsQuery = "SELECT * from " + tableName;
 
+// table: CREATE TABLE events(ID INT AUTO_INCREMENT, NAME VARCHAR(255), START_TIME  VARCHAR(255), VENUE VARCHAR(255), ORGANIZER_NAME VARCHAR(255), PRIMARY KEY (ID));
 
 public function addNewEvent (mod:Event event)(json jsonResponse, error err) {
 
