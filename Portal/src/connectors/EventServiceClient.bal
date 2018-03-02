@@ -15,14 +15,13 @@ public function addEvent (json payload)(json resPl) {
     http:OutRequest req = {};
     http:InResponse resp = {};
     
-    req.setJsonPayload("POST: Hello World");
+    req.setJsonPayload(payload);
     resp, _ = httpEndpoint.post("/events/add", req);
-    io:println("\nPOST request:");
     io:println(resp.getJsonPayload());
 return;
 }
 
-
+// Get Events from the event service
 public function getEvents ()(json resPl) {
     endpoint<http:HttpClient> httpEndpoint {
         create http:HttpClient(eventServiceEP, {});
@@ -30,8 +29,7 @@ public function getEvents ()(json resPl) {
     
     http:OutRequest req = {};
     http:InResponse resp = {};
-    
-    req.setJsonPayload("POST: Hello World");
+ 
     resp, _ = httpEndpoint.get("/events/get", req);
     resPl = resp.getJsonPayload();
 return;

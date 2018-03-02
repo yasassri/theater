@@ -1,6 +1,7 @@
 package src.serviceImpl;
 
 import ballerina.net.http;
+import ballerina.io;
 import src.model as mod;
 import src.utils as util;
 import src.connectors as con;
@@ -18,45 +19,39 @@ public function hadleGetEvents ()(http:OutResponse res) {
 public function handleAddTickets (json jsonPayload)(http:OutResponse res) {
 
     
-    // res = {};
-    // var ticket, err;
-    //     if (err != null) {
-    //         // The payload is not what we expected
-    //         res.setJsonPayload(util:generateJsonFromError(err));
-    //         res.statusCode = 500;
-    //         return;
-    //     }
+    var payLoad, err2 = <mod:AddEvent>jsonPayload;
 
-    // var pl, err = db:addTicketCountByEventId(ticket);
-    // if (err != null) {    
-    //     res.setJsonPayload(err.message);
-    //     res.statusCode = 500;
-    //     return;
-    //     }
-    // res.setJsonPayload(pl);
-    // res.statusCode = 200;
+    io:println("errXXXXXXXXXXXXXX");
+        io:println(err2);
+    
+    // Now we need to extract event part from the Payload.
+   json event = {
+        "name": payLoad.name,
+        "start_time": payLoad.start_time,
+        "venue": payLoad.venue,
+        "organizer_name": payLoad.organizer_name,
+        "event_type": payLoad.event_type
+         };
+
+    // Extact ticket information
+    var tickets = payLoad.tickets;
+    
+    // Add the event first
+    var resp = con:addEvent(event);
+    // Now add the tickets.   
+    foreach ticket in tickets) {
+        var js, err = <json>ticket;
+
+        io:println("err");
+        io:println(err);
+        io:println(con:addTicket(js));
+    }
+    // To-DO: If ticket adding fails the event should be removed
     return;
 }
 
 
 public function handlePurchaseTickets (json jsonPayload)(http:OutResponse res) {
-
-    // res = {};
-    // var ticket, err = <mod:Ticket> jsonPayload;
-    //     if (err != null) {
-    //         // The payload is not what we expected
-    //         res.setJsonPayload(util:generateJsonFromError(err));
-    //         res.statusCode = 500;
-    //         return;
-    //     }
-
-    // var pl, err = db:addTicketCountByEventId(ticket);
-    // if (err != null) {    
-    //     res.setJsonPayload(err.message);
-    //     res.statusCode = 500;
-    //     return;
-    //     }
-    // res.setJsonPayload(pl);
-    // res.statusCode = 200;
+ // Need to implement
     return;
 }

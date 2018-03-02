@@ -26,10 +26,8 @@ import src.serviceImpl as impl;
 
     resource addTickets (http:Connection conn,http:InRequest req) {
         http:OutResponse res = {};
-       
-        // json jsonRes = impl:addTicketCountByEventId(id, ticketNumber);
-        // res.setJsonPayload(jsonRes);
-        //     _ = conn.respond(res);
+   
+        _ = conn.respond(impl:handleAddTickets(req.getJsonPayload()));
         }
 
         @http:resourceConfig {

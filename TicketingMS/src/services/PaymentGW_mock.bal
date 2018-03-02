@@ -1,7 +1,8 @@
 package src.services;
 
 @http:configuration {
-    basePath:"/boc"
+    basePath:"/boc",
+    port:9094
 }
     service<http> PaymentService {
  @http:resourceConfig {
