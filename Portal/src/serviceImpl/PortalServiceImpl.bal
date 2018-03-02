@@ -5,8 +5,9 @@ import src.persistance as db;
 import src.model as mod;
 import src.utils as util;
 
-public function hadleGetTicketsByEventId (int eventId)(http:OutResponse res) {
+public function hadleGetEvents ()(http:OutResponse res) {
 
+// Here we need to call the Event Service
     res = {};
     var pl, err = db:getTicketCountByEventId(eventId);
     if (err != null) {    

@@ -34,7 +34,8 @@ public function addTicketCountByEventId (mod:Ticket tick)(json jsonRes, error er
     sql:Parameter para1 = {sqlType:sql:Type.VARCHAR, value:tick.eventId};
     sql:Parameter para2 = {sqlType:sql:Type.VARCHAR, value:tick.total_tickets};
     sql:Parameter para3 = {sqlType:sql:Type.VARCHAR, value:tick.ticketType};
-    params = [ para1, para2, para3 ];
+    sql:Parameter para4 = {sqlType:sql:Type.DOUBLE, value:tick.price};
+    params = [ para1, para2, para3, para4 ];
     int ret = ep.update(addTicketByID, params);
     
      if (ret == 1) {
