@@ -49,7 +49,19 @@ public function handleAddTickets (json jsonPayload)(http:OutResponse res) {
     return;
 }
 
+public function handleGetTickets (string id)(http:OutResponse res) {
+    res = {};
+    var a = con:getTicket(id);
+    io:println(a);
+    res.setJsonPayload(a);
+    return;
+}
+
+
+
 public function handlePurchaseTickets (json jsonPayload)(http:OutResponse res) {
  // Need to implement
+
+ 
     return;
 }

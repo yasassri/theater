@@ -30,10 +30,19 @@ import src.serviceImpl as impl;
         }
 
         @http:resourceConfig {
-        methods:["POST"],
-        path:"purchase"
+        methods:["GET"],
+        path:"getTicket/{eventId}"
     }
+    resource getTickets (http:Connection conn,http:InRequest req, string eventId) {
+       
+               _ = conn.respond(impl:handleGetTickets(eventId));
+        }
 
+
+    @http:resourceConfig {
+        methods:["GET"],
+        path:"buyTicket"
+    }
     resource buyTickets (http:Connection conn,http:InRequest req) {
         http:OutResponse res = {};
        

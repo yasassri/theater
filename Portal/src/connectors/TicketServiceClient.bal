@@ -14,12 +14,23 @@ public function addTicket (json payload)(json resPl) {
     
     http:OutRequest req = {};
     http:InResponse resp = {};
-    io:println("XXXXXXXXXXXXXX1111111111111111111111");
-    io:println(payload);
     req.setJsonPayload(payload);
     resp, _ = httpEndpoint.post("/tickets/add", req);
     resPl = resp.getJsonPayload();
-    io:println("XXXXXXXXXXXXXX");
+return;
+}
+
+public function getTicket (string id)(json resPl) {
+    endpoint<http:HttpClient> httpEndpoint {
+        create http:HttpClient(ticketServiceEP, {});
+    }
+    
+    http:OutRequest req = {};
+    http:InResponse resp = {};
+    resp, _ = httpEndpoint.get("/tickets/get/" + id, req);
+    io:println("XMXMXMXXMXMXMXMXXMXMXMXM");
+
+    resPl = resp.getJsonPayload();
     io:println(resPl);
 return;
 }
