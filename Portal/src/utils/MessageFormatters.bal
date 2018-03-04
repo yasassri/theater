@@ -1,4 +1,7 @@
 package src.utils;
+
+import ballerina.io;
+
 import src.model as mod;
 
 // Generates a Json error message from a provided error
@@ -11,4 +14,19 @@ public function generateJsonFromError(error err) (json jErr) {
 public function generateEventRequest(mod:AddEvent event) (json js) {
     js = {"name":event.name,"start_time":event.start_time,"venue":event.venue,"organizer_name":event.organizer_name,"event_type":event.event_type};
     return ;
+}
+
+// Get Ticket struct for a given Type
+public function getTicketByType (json js, string tType)(mod:Ticket2 ticketStruct) {
+ 
+    ticketStruct = null;
+    error err;
+     foreach ticket in js {
+      if (ticket.TICKET_TYPE.toString() == tType) {
+          io:println(ticket);
+          ticketStruct, err = <mod:Ticket2>ticket;
+          return;
+      }
+    }
+    return; 
 }

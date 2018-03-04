@@ -28,9 +28,25 @@ public function getTicket (string id)(json resPl) {
     http:OutRequest req = {};
     http:InResponse resp = {};
     resp, _ = httpEndpoint.get("/tickets/get/" + id, req);
-    io:println("XMXMXMXXMXMXMXMXXMXMXMXM");
-
     resPl = resp.getJsonPayload();
+    io:println("resPl");
     io:println(resPl);
 return;
 }
+
+//updateTicket
+public function updateTicket (int id, int count)(json resPl) {
+     endpoint<http:HttpClient> httpEndpoint {
+        create http:HttpClient(ticketServiceEP, {});
+    }
+    
+    http:OutRequest req = {};
+    http:InResponse resp = {};
+    resp, _ = httpEndpoint.post("/tickets/update/"+id+"/"+count, req);
+    resPl = resp.getJsonPayload();
+return; 
+    }
+
+
+
+

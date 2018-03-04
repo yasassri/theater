@@ -1,12 +1,14 @@
 package src.services;
 
+import ballerina.net.http;
+
 @http:configuration {
     basePath:"/boc",
     port:9094
 }
     service<http> PaymentService {
  @http:resourceConfig {
-        methods:["post"],
+        methods:["POST"],
         path:"/payment"
     }
 
@@ -25,7 +27,8 @@ package src.services;
 //    "remarks": "From Paul"
 // }
 
-        json jsonRes = {};
+        json jsonRes = {"Payment" : "Sucess!"};
+        res.statusCode = 200;
         res.setJsonPayload(jsonRes);
             _ = conn.respond(res);
         }

@@ -26,4 +26,13 @@ service<http> TicketDataService {
         http:OutResponse res = {};
         _ = conn.respond(impl:handleAddTickets(req.getJsonPayload()));
     }
+
+    @http:resourceConfig {
+        methods:["POST"],
+        path:"update/{ticketID}/{count}"
+    }
+    resource updateTickets (http:Connection conn,http:InRequest req, string ticketID, string count) {
+        http:OutResponse res = {};
+        _ = conn.respond(impl:handleUpdateTickets(ticketID, count));
+    }
 }

@@ -12,7 +12,7 @@ import src.serviceImpl as impl;
 
 @http:resourceConfig {
         methods:["GET"],
-        path:"getEvents"
+        path:"events"
     }
 
     resource getEvents (http:Connection conn,http:InRequest req) {      
@@ -21,9 +21,8 @@ import src.serviceImpl as impl;
 
     @http:resourceConfig {
         methods:["POST"],
-        path:"addEvents"
+        path:"events"
     }
-
     resource addTickets (http:Connection conn,http:InRequest req) {
         http:OutResponse res = {};
         _ = conn.respond(impl:handleAddTickets(req.getJsonPayload()));
@@ -31,7 +30,7 @@ import src.serviceImpl as impl;
 
         @http:resourceConfig {
         methods:["GET"],
-        path:"getTicket/{eventId}"
+        path:"tickets/{eventId}"
     }
     resource getTickets (http:Connection conn,http:InRequest req, string eventId) {
        
@@ -40,14 +39,15 @@ import src.serviceImpl as impl;
 
 
     @http:resourceConfig {
-        methods:["GET"],
-        path:"buyTicket"
+        methods:["POST"],
+        path:"purchase"
     }
     resource buyTickets (http:Connection conn,http:InRequest req) {
         http:OutResponse res = {};
        
+       var a = impl:handlePurchaseTickets(req.getJsonPayload());
         // json jsonRes = ops:addTicketCountByEventId();
         // res.setJsonPayload(jsonRes);
-        //     _ = conn.respond(res);
+         _ = conn.respond(a);
         }
     }

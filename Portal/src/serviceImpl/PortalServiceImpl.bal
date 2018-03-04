@@ -36,15 +36,15 @@ public function handleAddTickets (json jsonPayload)(http:OutResponse res) {
        return;
     }
     // Now add the tickets.   
-    foreach ticket in tickets) {
+    foreach ticket in tickets {
+        
         var i, err = <int>resp.id.toString();
-        ticket.eventId = i;
+        ticket.event_id = i;
         var js, err = <json>ticket;
         // IF error we need to revert the process
         var addTicketres = con:addTicket(js);
     }
     // To-DO: If ticket adding fails the event should be rolled back
-    io:println(resp);
     res.setJsonPayload(resp);
     return;
 }
@@ -58,10 +58,47 @@ public function handleGetTickets (string id)(http:OutResponse res) {
 }
 
 
-
 public function handlePurchaseTickets (json jsonPayload)(http:OutResponse res) {
- // Need to implement
+    res = {};
 
- 
+    var c, err  = <mod:PurchaseTicket>jsonPayload;
+    if (err != null) {
+        res.setJsonPayload(err.message);
+        return;
+    }
+
+    // Get the ticket information // Improve the string conversion
+    var b = con:getTicket(c.eventId + "");
+    var tick = util:getTicketByType (b, c.ticket_type);
+    if (tick == null) {
+        // There is no matching type, Lets throw a error
+        error er = {message: "No Matching Ticket Type found"};
+        res.statusCode = 500;
+        res.setJsonPayload(util:generateJsonFromError(er));
+        return;
+    }
+    io:println("gateWayResXXXXXXXXX");
+    //Check whether we have enough tickets
+    if ( c.noOfTickets >  tick.TOTAL - tick.BOOKED) {
+        // Not enough tickets
+        error er = {message: "The ammount you requested not available."};
+        res.statusCode = 500;
+        res.setJsonPayload(util:generateJsonFromError(er));
+        return;
+    }
+
+    var gateWayRes, gwStatus = con:makePayment(jsonPayload);
+
+     if(gwStatus != 200) {
+       res.setJsonPayload(gateWayRes);
+       res.statusCode = gwStatus;
+       return;
+    }
+
+    // If reached Payment is successfull. Deduct the ticket count
+    var tickUpdateRes = con:updateTicket(tick.ID, c.noOfTickets);
+
+    res.setJsonPayload(tickUpdateRes);
+    res.statusCode = 200;
     return;
 }
