@@ -20,7 +20,9 @@ public function handleAddTickets (json jsonPayload)(http:OutResponse res) {
 
     res = {};
     var payLoad, err2 = <mod:AddEvent>jsonPayload;
-    
+    io:println("XXXXXX");
+    io:println(payLoad);
+    io:println(err2);
     // Now we need to extract event part from the Payload.
    json event = util:generateEventRequest(payLoad);
 
@@ -39,8 +41,17 @@ public function handleAddTickets (json jsonPayload)(http:OutResponse res) {
     foreach ticket in tickets {
         
         var i, err = <int>resp.id.toString();
-        ticket.event_id = i;
-        var js, err = <json>ticket;
+        
+        // Constrct the request JSon
+        json js = {
+                "ticket_type": ticket.ticket_type,
+                "eventId": i,
+                "total_tickets": ticket.total_tickets,
+                "booked_tickets": ticket.booked_tickets,
+                "price": ticket.price
+                };
+        // ticket.event_id = i;
+        // var js, err = <json>ticket;
         // IF error we need to revert the process
         var addTicketres = con:addTicket(js);
     }

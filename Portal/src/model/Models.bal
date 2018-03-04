@@ -18,7 +18,6 @@ public struct AddTicket {
 
 public struct Ticket {
     string ticket_type;
-    int event_id;
     int total_tickets;
     int booked_tickets;
     float price;
