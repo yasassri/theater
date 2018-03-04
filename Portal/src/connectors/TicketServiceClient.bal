@@ -29,8 +29,6 @@ public function getTicket (string id)(json resPl) {
     http:InResponse resp = {};
     resp, _ = httpEndpoint.get("/tickets/get/" + id, req);
     resPl = resp.getJsonPayload();
-    io:println("resPl");
-    io:println(resPl);
 return;
 }
 

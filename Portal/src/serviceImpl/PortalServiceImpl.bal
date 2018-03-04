@@ -20,9 +20,7 @@ public function handleAddTickets (json jsonPayload)(http:OutResponse res) {
 
     res = {};
     var payLoad, err2 = <mod:AddEvent>jsonPayload;
-    io:println("XXXXXX");
-    io:println(payLoad);
-    io:println(err2);
+
     // Now we need to extract event part from the Payload.
    json event = util:generateEventRequest(payLoad);
 
@@ -63,7 +61,6 @@ public function handleAddTickets (json jsonPayload)(http:OutResponse res) {
 public function handleGetTickets (string id)(http:OutResponse res) {
     res = {};
     var a = con:getTicket(id);
-    io:println(a);
     res.setJsonPayload(a);
     return;
 }
@@ -88,7 +85,7 @@ public function handlePurchaseTickets (json jsonPayload)(http:OutResponse res) {
         res.setJsonPayload(util:generateJsonFromError(er));
         return;
     }
-    io:println("gateWayResXXXXXXXXX");
+
     //Check whether we have enough tickets
     if ( c.noOfTickets >  tick.TOTAL - tick.BOOKED) {
         // Not enough tickets
