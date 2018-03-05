@@ -1,8 +1,5 @@
 package src.services;
 import ballerina.net.http;
-import ballerina.time;
-import ballerina.io;
-import ballerina.data.sql;
 import src.serviceImpl as impl;
 @http:configuration {
     basePath:"/tickets",
@@ -13,17 +10,16 @@ service<http> TicketDataService {
         methods:["GET"],
         path:"get/{eventID}"
     }
-    resource getTickets (http:Connection conn,http:InRequest req,string eventID) {
-        var id,_ = <int>eventID;
+    resource getTickets (http:Connection conn, http:InRequest req, string eventID) {
+        var id, _ = <int>eventID;
         _ = conn.respond(impl:hadleGetTicketsByEventId(id));
     }
-    
+
     @http:resourceConfig {
         methods:["POST"],
         path:"add"
     }
-    resource addTickets (http:Connection conn,http:InRequest req) {
-        http:OutResponse res = {};
+    resource addTickets (http:Connection conn, http:InRequest req) {
         _ = conn.respond(impl:handleAddTickets(req.getJsonPayload()));
     }
 
@@ -31,8 +27,7 @@ service<http> TicketDataService {
         methods:["POST"],
         path:"update/{ticketID}/{count}"
     }
-    resource updateTickets (http:Connection conn,http:InRequest req, string ticketID, string count) {
-        http:OutResponse res = {};
+    resource updateTickets (http:Connection conn, http:InRequest req, string ticketID, string count) {
         _ = conn.respond(impl:handleUpdateTickets(ticketID, count));
     }
 }

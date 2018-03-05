@@ -1,12 +1,11 @@
 package src.model;
 
 // Model struct for a ticket
-public struct Ticket{
-
+public struct Ticket {
+    int id;
+    int event_id;
+    int total;
+    int booked;
     string ticket_type;
-    int eventId;
-    int total_tickets;
-    int booked_tickets;
     float price;
-
 }

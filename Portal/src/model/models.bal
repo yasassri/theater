@@ -18,15 +18,13 @@ public struct AddTicket {
 
 public struct Ticket {
     string ticket_type;
-    int total_tickets;
-    int booked_tickets;
+    int total;
+    int booked;
     float price;
 
 }
 
-
-// Struct to represent puchase request
-
+// Struct to represent purchase request
 public struct PurchaseTicket {
     int eventId;
     string ticket_type;
@@ -42,15 +40,4 @@ public struct CredCardInfo {
     int cvcNo;
     string expireDate;
     string cardHolderName;
-}
-
-// Had to create this since Json -> struct conversion is case sensitive
-// Should improve
-public struct Ticket2 {
-    int ID;
-    string TICKET_TYPE;
-    int EVENT_ID;
-    int TOTAL;
-    int BOOKED;
-    float PRICE;
 }

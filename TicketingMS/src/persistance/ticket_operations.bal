@@ -8,9 +8,6 @@ const string TABLE_NAME = "tickets";
 const string getTicketByID = "SELECT * FROM " + TABLE_NAME + " where EVENT_ID = ?";
 const string addTicketByID = "INSERT INTO " + TABLE_NAME + " (EVENT_ID, TOTAL, TICKET_TYPE , PRICE, BOOKED) VALUES (?, ?, ?, ?, 0)";
 
-// tickets table
-// CREATE TABLE tickets(ID INT AUTO_INCREMENT, EVENT_ID INT, TOTAL INT, BOOKED INT, TYPE VARCHAR(255), PRICE DECIMAL(6,2), PRIMARY KEY (ID));
-
 public function getTicketCountByEventId (int eventId)(json, error) {
     endpoint<sql:ClientConnector> ep {}
     bind sqlCon with ep;
@@ -18,8 +15,10 @@ public function getTicketCountByEventId (int eventId)(json, error) {
     sql:Parameter[] params = [];
     sql:Parameter para1 = {sqlType:sql:Type.VARCHAR, value:eventId};
     params = [ para1 ];
-    table dt = ep.select(getTicketByID, params, null);
+    table dt = ep.select(getTicketByID, params, typeof mod:Ticket);
     var jsonRes, err = <json>dt;
+    io:println("111111111111");
+    io:println(jsonRes.toString());
     // Check for errors
     return jsonRes, err;
 }
@@ -31,17 +30,17 @@ public function addTicketCountByEventId (mod:Ticket tick)(json jsonRes, error er
 
     io:println(tick.price);
     sql:Parameter[] params = [];
-    sql:Parameter para1 = {sqlType:sql:Type.VARCHAR, value:tick.eventId};
-    sql:Parameter para2 = {sqlType:sql:Type.VARCHAR, value:tick.total_tickets};
+    sql:Parameter para1 = {sqlType:sql:Type.VARCHAR, value:tick.event_id};
+    sql:Parameter para2 = {sqlType:sql:Type.VARCHAR, value:tick.total};
     sql:Parameter para3 = {sqlType:sql:Type.VARCHAR, value:tick.ticket_type};
     sql:Parameter para4 = {sqlType:sql:Type.DECIMAL, value:tick.price};
     params = [ para1, para2, para3, para4 ];
     int ret = ep.update(addTicketByID, params);
     
      if (ret == 1) {
-            jsonRes = {"Success" : tick.eventId + " added tickets successfully"};
+            jsonRes = {"Success" : tick.event_id + " added tickets successfully"};
         } else {
-            err = {message:"Ticket for " + tick.eventId + " Couldn't be added"};
+            err = {message:"Ticket for " + tick.event_id + " Couldn't be added"};
         }
     return;
 }
@@ -68,4 +67,15 @@ public function updateTicketCount (int ticketId, int count)(json jsonRes, error 
         }
     // Check for errors
     return jsonRes, err;
+}
+
+public struct Ticket3 {
+
+    string ticket_type;
+    int id;
+    int event_id;
+    int total;
+    int booked;
+    float price;
+
 }
