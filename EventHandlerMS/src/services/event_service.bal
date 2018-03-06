@@ -4,7 +4,6 @@ import ballerina.net.http;
 import ballerina.time;
 import ballerina.io;
 
-import src.persistance as persist;
 import src.serviceImpl as impl;
 import src.model as mod;
 
@@ -23,9 +22,9 @@ service<http> eventsDataService {
         methods:["POST"],
         path:"/add"
     }
-    resource addEvent (http:Connection conn,http:InRequest req) {
+    resource addEvent (http:Connection conn, http:InRequest req) {
         io:println(req.getJsonPayload());
-      _ = conn.respond(impl:handleAddEvent(req.getJsonPayload(), persist:addNewEvent));
+      _ = conn.respond(impl:handleAddEvent(req.getJsonPayload()));
 
     }
 

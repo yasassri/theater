@@ -17,8 +17,6 @@ public function getTicketCountByEventId (int eventId)(json, error) {
     params = [ para1 ];
     table dt = ep.select(getTicketByID, params, typeof mod:Ticket);
     var jsonRes, err = <json>dt;
-    io:println("111111111111");
-    io:println(jsonRes.toString());
     // Check for errors
     return jsonRes, err;
 }
@@ -28,7 +26,6 @@ public function addTicketCountByEventId (mod:Ticket tick)(json jsonRes, error er
     endpoint<sql:ClientConnector> ep {}
     bind sqlCon with ep;
 
-    io:println(tick.price);
     sql:Parameter[] params = [];
     sql:Parameter para1 = {sqlType:sql:Type.VARCHAR, value:tick.event_id};
     sql:Parameter para2 = {sqlType:sql:Type.VARCHAR, value:tick.total};

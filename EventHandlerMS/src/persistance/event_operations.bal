@@ -5,7 +5,7 @@ const string tableName = "events";
 const string getAllEventsQuery = "SELECT * from " + tableName;
 
 public function addNewEvent(mod:Event event) (json jsonResponse,error err) {
-    endpoint<sql:ClientConnector> ep{
+    endpoint<sql:ClientConnector> ep {
     }
     bind sqlCon with ep;
     sql:Parameter[] params = [];
@@ -43,8 +43,6 @@ sql:Parameter[] params = [];
 sql:Parameter para1 = {sqlType:sql:Type.VARCHAR,value:name};
 params = [para1];
 table dt = ep.select("SELECT ID FROM " + tableName + " WHERE NAME = ?", params, null);
-// table dt = ep.select("SELECT * FROM tickets", params, null);
-
 
 var jsonRes,err = <json>dt;
 if (lengthof jsonRes > 0) {

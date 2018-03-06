@@ -22,7 +22,7 @@ public function handleGetAllEventRequest (http:InRequest req)(http:OutResponse r
 
 // Service implementation to handle get service request
 // Parsing a function pointer to make it testable
-public function handleAddEvent (json jsonPayload, function (mod:Event event)(json jsonResponse, error err) persistFunction)
+public function handleAddEvent (json jsonPayload)
                                (http:OutResponse res) {
     res = {};
     var event, err = <mod:Event> jsonPayload;
@@ -33,7 +33,9 @@ public function handleAddEvent (json jsonPayload, function (mod:Event event)(jso
             return;
         }
     
-    var payload, err = persistFunction(event);
+    var payload, err = persist:addNewEvent(event);
+    io:println("1111111111");
+    io:println(payload);
 
     if (err != null) {    
         res.setJsonPayload(util:generateJsonFromError(err));

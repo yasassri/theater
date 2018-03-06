@@ -20,8 +20,6 @@ public function handleAddTickets (json jsonPayload) (http:OutResponse res) {
 
     res = {};
     var payLoad, err2 = <mod:AddEvent>jsonPayload;
-    io:println(payLoad);
-    io:println(err2);
 
     // Now we need to extract event part from the Payload.
     json event = util:generateEventRequest(payLoad);
@@ -62,7 +60,6 @@ public function handleAddTickets (json jsonPayload) (http:OutResponse res) {
 
 public function handleGetTickets (string id) (http:OutResponse res) {
     res = {};
-    io:println("XXXXXXXXXXXXXX");
     var a = con:getTicket(id);
     res.setJsonPayload(a);
     return;
@@ -80,9 +77,6 @@ public function handlePurchaseTickets (json jsonPayload) (http:OutResponse res) 
     var b = con:getTicket(c.eventId + "");
 
     var tick, ticketId = util:getTicketByType(b, c.ticket_type);
-    io:println("XXXXXXXX111");
-    io:println(b);
-    io:println(c.ticket_type);
 
     if (tick == null) {
         // There is no matching type, Lets throw a error
