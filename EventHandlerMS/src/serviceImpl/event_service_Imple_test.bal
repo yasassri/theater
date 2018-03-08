@@ -45,8 +45,10 @@ function testValidPayload () {
                               "Success":"Ballerina50 event is Created",
                               "id":"2"
                           };
+
+    var jsonPayload, _ = req.getJsonPayload();
     // Assert the payload
-    test:assertEquals(res.getJsonPayload(), assertResponse, "Response Didn't match");
+    test:assertEquals(jsonPayload, assertResponse, "Response Didn't match");
 
     // assert the response code
     test:assertEquals(res.statusCode, 200, "Response Didn't match");

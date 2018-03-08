@@ -1,6 +1,5 @@
 package src.serviceImpl;
 
-import ballerina.io;
 import ballerina.net.http;
 import src.connectors as con;
 import src.model as mod;
