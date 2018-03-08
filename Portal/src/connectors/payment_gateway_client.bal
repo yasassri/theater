@@ -16,7 +16,7 @@ public function makePayment (json payload) (json resPl, int status) {
     http:InResponse resp = {};
     req.setJsonPayload(payload);
     resp, _ = httpEndpoint.post("/boc/payment", req);
-    resPl = resp.getJsonPayload();
+    resPl, _ = resp.getJsonPayload();
     status = resp.statusCode;
     return;
 }

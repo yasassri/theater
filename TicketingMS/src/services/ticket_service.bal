@@ -20,7 +20,8 @@ service<http> TicketDataService {
         path:"add"
     }
     resource addTickets (http:Connection conn, http:InRequest req) {
-        _ = conn.respond(impl:handleAddTickets(req.getJsonPayload()));
+        var jsonPayload, _ = req.getJsonPayload();
+        _ = conn.respond(impl:handleAddTickets(jsonPayload));
     }
 
     @http:resourceConfig {

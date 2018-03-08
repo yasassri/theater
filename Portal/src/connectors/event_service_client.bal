@@ -14,7 +14,8 @@ public function addEvent (json payload) (json, int) {
     http:OutRequest req = {};
     req.setJsonPayload(payload);
     var resp, e = httpEndpoint.post("/events/add", req);
-    return resp.getJsonPayload(), resp.statusCode;
+    var jsonPayload, _ = req.getJsonPayload();
+    return jsonPayload, resp.statusCode;
 }
 
 public function getEvents () (json resPl) {
@@ -24,6 +25,6 @@ public function getEvents () (json resPl) {
     http:OutRequest req = {};
     http:InResponse resp = {};
     resp, _ = httpEndpoint.get("/events/get", req);
-    resPl = resp.getJsonPayload();
+    resPl, _ = resp.getJsonPayload();
     return;
 }

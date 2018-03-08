@@ -1,8 +1,8 @@
 package src.connectors;
 
 import ballerina.config;
-import ballerina.net.http;
 import ballerina.io;
+import ballerina.net.http;
 
 const string ticketServiceEP = "http://localhost:9092";
 const string ticketServiceEPC = config:getGlobalValue("ticket.endpoint");
@@ -16,7 +16,7 @@ public function addTicket (json payload) (json resPl) {
     http:InResponse resp = {};
     req.setJsonPayload(payload);
     resp, _ = httpEndpoint.post("/tickets/add", req);
-    resPl = resp.getJsonPayload();
+    resPl, _ = resp.getJsonPayload();
     return;
 }
 
@@ -28,7 +28,7 @@ public function getTicket (string id) (json resPl) {
     http:OutRequest req = {};
     http:InResponse resp = {};
     resp, _ = httpEndpoint.get("/tickets/get/" + id, req);
-    resPl = resp.getJsonPayload();
+    resPl, _ = resp.getJsonPayload();
     io:println(resPl);
     return;
 }
@@ -42,7 +42,7 @@ public function updateTicket (int id, int count) (json resPl) {
     http:OutRequest req = {};
     http:InResponse resp = {};
     resp, _ = httpEndpoint.post("/tickets/update/" + id + "/" + count, req);
-    resPl = resp.getJsonPayload();
+    resPl, _ = resp.getJsonPayload();
     return;
 }
 

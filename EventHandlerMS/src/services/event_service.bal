@@ -1,11 +1,8 @@
 package src.services;
 
-import ballerina.net.http;
-import ballerina.time;
 import ballerina.io;
-
+import ballerina.net.http;
 import src.serviceImpl as impl;
-import src.model as mod;
 
 string tableName = "EVENTS";
 // table: CREATE TABLE events(ID INT AUTO_INCREMENT, NAME VARCHAR(255), START_TIME  VARCHAR(255), VENUE VARCHAR(255), ORGANIZER_NAME VARCHAR(255), PRIMARY KEY (ID));
@@ -23,8 +20,9 @@ service<http> eventsDataService {
         path:"/add"
     }
     resource addEvent (http:Connection conn, http:InRequest req) {
-        io:println(req.getJsonPayload());
-      _ = conn.respond(impl:handleAddEvent(req.getJsonPayload()));
+        var jsonPayload, _ = req.getJsonPayload();
+        io:println(jsonPayload);
+        _ = conn.respond(impl:handleAddEvent(jsonPayload));
 
     }
 
