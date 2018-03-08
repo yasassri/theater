@@ -11,9 +11,7 @@ import src.model as mod;
     functionName:"addNewEvent"
 }
 function mockAddNewEvent (mod:Event evnt) (json jsonResponse, error err) {
-    io:println("Mock Service for addEventXXXXXXXXXXXXXXXXXXXXXXXXXXXxx");
-    // Getting different
-    io:println(evnt.name);
+
     if (evnt.name == "negative") {
         io:println("Mock Service for 222222");
         err = {message:"Error"};

@@ -1,13 +1,14 @@
-package src.services;
+package event.handler.services;
 
 import ballerina.io;
 import ballerina.net.http;
-import src.serviceImpl as impl;
+import event.handler.serviceImpl as impl;
 
-string tableName = "EVENTS";
-// table: CREATE TABLE events(ID INT AUTO_INCREMENT, NAME VARCHAR(255), START_TIME  VARCHAR(255), VENUE VARCHAR(255), ORGANIZER_NAME VARCHAR(255), PRIMARY KEY (ID));
-// sql:ClientConnector dbConnector = create sql:ClientConnector(sql:DB.MYSQL, "localhost", 3306,
-//             "events_db", "root", "root", {maximumPoolSize:5});
+public function dummy ()(int a) {
+    io:println("test");
+    // This is added as a workaround to make services visible from different packages
+    return;
+}
 
 @http:configuration {
     basePath:"/events",
@@ -21,7 +22,7 @@ service<http> eventsDataService {
     }
     resource addEvent (http:Connection conn, http:InRequest req) {
         var jsonPayload, _ = req.getJsonPayload();
-        io:println(jsonPayload);
+
         _ = conn.respond(impl:handleAddEvent(jsonPayload));
 
     }
@@ -43,4 +44,6 @@ service<http> eventsDataService {
     }
     
 }
+
+
 

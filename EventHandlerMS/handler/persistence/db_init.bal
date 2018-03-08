@@ -25,7 +25,7 @@ function initializeDB (sql:ClientConnector connInit) {
     endpoint<sql:ClientConnector> ep {
     }
     bind connInit with ep;
-    string query = "CREATE TABLE IF NOT EXISTS EVENTS(ID INT AUTO_INCREMENT, NAME VARCHAR(255), START_TIME
+    string query = "CREATE TABLE IF NOT EXISTS EVENTS(ID INT AUTO_INCREMENT, NAME VARCHAR(255) UNIQUE, START_TIME
     VARCHAR(255), VENUE VARCHAR(255), ORGANIZER_NAME VARCHAR(255), PRIMARY KEY (ID))";
     int ret = ep.update(query, null);
 

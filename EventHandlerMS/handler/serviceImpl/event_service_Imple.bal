@@ -25,7 +25,6 @@ public function handleGetAllEventRequest (http:InRequest req)(http:OutResponse r
 public function handleAddEvent (json jsonPayload)
                                (http:OutResponse res) {
     res = {};
-   io:println("111111111111");
     var event, err = <mod:Event> jsonPayload;
         if (err != null) {
             // The payload is not what we expected
