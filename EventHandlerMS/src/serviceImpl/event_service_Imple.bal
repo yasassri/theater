@@ -25,6 +25,7 @@ public function handleGetAllEventRequest (http:InRequest req)(http:OutResponse r
 public function handleAddEvent (json jsonPayload)
                                (http:OutResponse res) {
     res = {};
+   io:println("111111111111");
     var event, err = <mod:Event> jsonPayload;
         if (err != null) {
             // The payload is not what we expected
@@ -34,8 +35,6 @@ public function handleAddEvent (json jsonPayload)
         }
     
     var payload, err = persist:addNewEvent(event);
-    io:println("1111111111");
-    io:println(payload);
 
     if (err != null) {    
         res.setJsonPayload(util:generateJsonFromError(err));

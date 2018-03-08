@@ -11,13 +11,13 @@ import src.model as mod;
     functionName:"addNewEvent"
 }
 function mockAddNewEvent (mod:Event evnt) (json jsonResponse, error err) {
-    io:println("I'm the mockIntAdd!");
+    io:println("Mock Service for addEventXXXXXXXXXXXXXXXXXXXXXXXXXXXxx");
     // Getting different
+    io:println(evnt.name);
     if (evnt.name == "negative") {
-        jsonResponse = {
-                           "Success":"Ballerina50 event is Created",
-                           "id":"2"
-                       };
+        io:println("Mock Service for 222222");
+        err = {message:"Error"};
+        return;
     }
     jsonResponse = {
                        "Success":"Ballerina50 event is Created",
@@ -37,18 +37,18 @@ function testValidPayload () {
                                "organizer_name":"Tyler",
                                "event_type":"Ballet"
                            };
+    json actualResponse = {"Success":"Ballerina50 event is Created", "id":"2"};
 
     http:OutResponse res = {};
+    //
     res = handleAddEvent(addEventPayLoad);
 
-    json assertResponse = {
-                              "Success":"Ballerina50 event is Created",
-                              "id":"2"
-                          };
+    var jsonPayload, err = res.getJsonPayload();
 
-    var jsonPayload, _ = req.getJsonPayload();
+    // Check whether there is an Error when getting the payload
+    test:assertEquals(err, null, "There was an error when getting the JsonPayload");
     // Assert the payload
-    test:assertEquals(jsonPayload, assertResponse, "Response Didn't match");
+    test:assertEquals(jsonPayload, actualResponse, "Response Didn't match");
 
     // assert the response code
     test:assertEquals(res.statusCode, 200, "Response Didn't match");
@@ -64,12 +64,40 @@ function testInvalidPayload () {
                                "start_time":"5.25"
                            };
 
+    json actualResponse = {"There was a Error":"cannot convert 'json' to type 'src.model:Event': error while mapping 'venue': no such field found in json"};
+
     http:OutResponse res = {};
     res = handleAddEvent(addEventPayLoad);
+    var jsonPayload, err = res.getJsonPayload();
 
-    json assertResponse = {"There was a Error":"cannot convert 'json' to type 'src.model:Event': error while mapping 'venue': no such field found in json"};
-    test:assertEquals(res.getJsonPayload(), assertResponse, "Response Didn't match");
+    // Check whether there is an Error when getting the payload
+    test:assertEquals(err, null, "There was an error when getting the JsonPayload");
+    // Assert the payload
+    test:assertEquals(jsonPayload, actualResponse, "Response Didn't match");
+    // Assert the response code
     test:assertEquals(res.statusCode, 500, "Response Didn't match");
 }
 
 
+@Description {value:"Tests error returned from addNewEvent"}
+@test:config {}
+function testErrorReturnedFromDb () {
+
+    json addEventPayLoad = {
+                               "name":"negative",
+                               "start_time":"5.25",
+                               "venue":"WSO2",
+                               "organizer_name":"Tyler",
+                               "event_type":"Ballet"
+                           };
+    json actualResponse = {"There was a Error":"Error"};
+
+    http:OutResponse res = {};
+    res = handleAddEvent(addEventPayLoad);
+    var jsonPayload, err = res.getJsonPayload();
+    test:assertEquals(err, null, "There was an error when getting the JsonPayload");
+    // Assert the payload
+    test:assertEquals(jsonPayload, actualResponse, "Response Didn't match");
+    // Assert the response code
+    test:assertEquals(res.statusCode, 500, "Response Didn't match");
+}

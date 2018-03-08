@@ -3,24 +3,20 @@ package src.persistance;
 import ballerina.data.sql;
 import ballerina.io;
 
+const string h2DbLocation = "./";
+const int h2Port = 3306;
+const string h2Database = "EVENTS";
+const string h2UserName = "root";
+const string h2Password = "root";
+// Above will be replaced from the config API as below
+// string mysqlHostName = config:getGlobalValue("database.host");
+
 public sql:ClientConnector sqlCon = initDb();
 
 function initDb () (sql:ClientConnector connInit) {
-    string mysqlHostName = "./";
-    int h2Port = 3306;
-    string h2Database = "EVENTS";
-    string h2UserName = "root";
-    string h2Password = "root";
-    // Above will be replaced from the config API as below
-    // string mysqlHostName = config:getGlobalValue("database.host");
-    // var mysqlPort, _ = <int>config:getGlobalValue("database.port");
-    // string mysqlDatabase = config:getGlobalValue("database.name");
-    // string mysqlUserName = config:getGlobalValue("database.username");
-    // string mysqlPassword = config:getGlobalValue("database.password");
-    //map props = {verifyServerCertificate:false, useSSL:false};
 
     sql:ConnectionProperties propertiesInit = {maximumPoolSize:5, connectionTimeout:300000, datasourceProperties: null};
-    connInit = create sql:ClientConnector(sql:DB.H2_FILE, mysqlHostName, h2Port, h2Database, h2UserName, h2Password, propertiesInit);
+    connInit = create sql:ClientConnector(sql:DB.H2_FILE, h2DbLocation, h2Port, h2Database, h2UserName, h2Password, propertiesInit);
     initializeDB(connInit);
     return;
 }
