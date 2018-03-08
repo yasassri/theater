@@ -1,7 +1,7 @@
-package src.services;
+package portal.services;
 
 import ballerina.net.http;
-import src.serviceImpl as impl;
+import portal.serviceImpl as impl;
 
 @http:configuration {
     basePath:"/portal"
@@ -35,7 +35,6 @@ service<http> PortalService {
 
         _ = conn.respond(impl:handleGetTickets(eventId));
     }
-
 
     @http:resourceConfig {
         methods:["POST"],

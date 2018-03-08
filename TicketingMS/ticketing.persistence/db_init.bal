@@ -1,4 +1,4 @@
-package src.persistance;
+package ticketing.persistence;
 
 import ballerina.data.sql;
 

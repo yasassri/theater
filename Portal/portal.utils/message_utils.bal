@@ -1,7 +1,7 @@
-package src.utils;
+package portal.utils;
 
 import ballerina.io;
-import src.model as mod;
+import portal.model as mod;
 
 // Generates a Json error message from a provided error
 public function generateJsonFromError (error err) (json jErr) {

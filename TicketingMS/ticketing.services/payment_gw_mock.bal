@@ -1,4 +1,4 @@
-package src.services;
+package ticketing.services;
 
 import ballerina.net.http;
 

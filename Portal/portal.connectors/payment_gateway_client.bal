@@ -1,4 +1,4 @@
-package src.connectors;
+package portal.connectors;
 
 
 import ballerina.config;

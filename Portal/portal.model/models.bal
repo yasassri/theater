@@ -1,4 +1,4 @@
-package src.model;
+package portal.model;
 
 // Model struct Add Event Request
 public struct AddEvent {

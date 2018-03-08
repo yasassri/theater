@@ -1,6 +1,6 @@
-package src.services;
+package ticketing.services;
 import ballerina.net.http;
-import src.serviceImpl as impl;
+import ticketing.serviceImpl as impl;
 @http:configuration {
     basePath:"/tickets",
     port:9092

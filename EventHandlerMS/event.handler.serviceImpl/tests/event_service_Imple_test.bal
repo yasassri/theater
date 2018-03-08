@@ -7,7 +7,7 @@ import event.handler.model as mod;
 
 @Description {value:"This is a mock function"}
 @test:mock {
-    packageName:"src.persistance",
+    packageName:"src.persistence",
     functionName:"addNewEvent"
 }
 function mockAddNewEvent (mod:Event evnt) (json jsonResponse, error err) {

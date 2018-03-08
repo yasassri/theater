@@ -1,4 +1,4 @@
-package src.persistance;
+package ticketing.persistance;
 
 import ballerina.io;
 import src.model as mod;

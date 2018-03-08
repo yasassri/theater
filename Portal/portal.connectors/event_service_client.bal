@@ -1,11 +1,11 @@
-package src.connectors;
+package portal.connectors;
+
 import ballerina.config;
 import ballerina.net.http;
 
 
 const string eventServiceEP = "http://localhost:9093";
 const string eventServiceEPC = config:getGlobalValue("event.endpoint");
-
 
 public function addEvent (json payload) (json, int) {
 

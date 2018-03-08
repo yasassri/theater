@@ -1,4 +1,4 @@
-package src.model;
+package ticketing.model;
 
 // Model struct for a ticket
 public struct Ticket {

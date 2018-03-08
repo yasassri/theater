@@ -1,9 +1,9 @@
-package src.serviceImpl;
+package portal.serviceImpl;
 
 import ballerina.net.http;
-import src.connectors as con;
-import src.model as mod;
-import src.utils as util;
+import portal.connectors as con;
+import portal.model as mod;
+import portal.utils as util;
 
 public function hadleGetEvents () (http:OutResponse res) {
 

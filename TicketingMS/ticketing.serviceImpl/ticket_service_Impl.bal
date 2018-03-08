@@ -1,10 +1,10 @@
-package src.serviceImpl;
+package ticketing.serviceImpl;
 
 import ballerina.io;
 import ballerina.net.http;
-import src.model as mod;
-import src.persistance as db;
-import src.utils as util;
+import ticketing.model as mod;
+import ticketing.persistance as db;
+import ticketing.utils as util;
 
 public function hadleGetTicketsByEventId (int eventId) (http:OutResponse res) {
 
@@ -16,7 +16,6 @@ public function hadleGetTicketsByEventId (int eventId) (http:OutResponse res) {
         res.statusCode = 500;
         return;
     }
-    io:println("XXXXXXXXXXXXXXXXXXXxx");
     res.setJsonPayload(pl);
     res.statusCode = 200;
     return;

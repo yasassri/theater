@@ -8,13 +8,13 @@ import ballerina.io;
 
 // We will mock the DB function and test the services here
 // This uses following features of testerina
-// before test functions, After test functions, data providers, service start capability
+// before test functions, After test functions, service start capability
 
 string eventServiceEp;
 
 @Description {value:"This is a mock function to mock DB operations"}
 @test:mock {
-    packageName:"src.persistance",
+    packageName:"src.persistence",
     functionName:"addNewEvent"
 }
 function mockAddNewEvent (mod:Event evnt) (json jsonResponse, error err) {
