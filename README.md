@@ -27,9 +27,13 @@ This service is responsible for handling ticketing related operations.
 
 #### Register Event Message flow
 
+Following sequence diagram depicts the event registration message flow.
+
 ![Alt text](resources/images/EventRegisterFlow_2.png?raw=true "Register Event")
 
 #### Prchase Ticket Message flow
+
+Following sequence diagram depicts the ticket purchasing message flow.
 
 ![Alt text](resources/images/EventRegisterFlow_2.png?raw=true "Purchase Ticket")
 
