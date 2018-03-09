@@ -1,6 +1,6 @@
-# event-manager
+# Theatre
 
-A ballerina Theatre manager which handles events and issuance of tickets.
+A ballerina based Theatre manager which handles events and issuance of tickets.
 
 
 This sample is intended to  demonstrate testerina capabilities.
@@ -29,6 +29,12 @@ Now you can perform following operation os the applications
 ### Add Events
 
 Send a POST request to portal endpoint with the following payload.
+
+````
+End Point :
+
+http://localhost:9090/portal/events
+`````
 ````json
 {
   "name": "Ballerina",
@@ -54,4 +60,59 @@ Send a POST request to portal endpoint with the following payload.
 ````
 
 ### Get Existing Events
+
+Send a get request to portal endpoint
+ 
+ ````
+ End Point :
+ 
+ http://localhost:9090/portal/events
+ ````
+ 
+ Response
+ 
+ ````
+ [
+   {
+ "ID": 3,
+ "NAME": "Ballerina54",
+ "START_TIME": "5.25",
+ "VENUE": "WSO2",
+ "ORGANIZER_NAME": "Tyler"
+ }
+ ],
+ ````
+
+### Get Ticket info by Event ID
+
+````
+Endpoint : 
+
+http://localhost:9090/portal/tickets/{Event_ID}
+````
+
+Response
+
+````json
+[
+  {
+"id": 3,
+"event_id": 3,
+"total": 10,
+"booked": 0,
+"ticket_type": "BALCONY",
+"price": 250
+},
+  {
+"id": 4,
+"event_id": 3,
+"total": 50,
+"booked": 0,
+"ticket_type": "BOX",
+"price": 1000
+}
+]
+````
+
+### Purchasing Tickets
 
