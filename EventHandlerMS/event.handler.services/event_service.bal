@@ -42,7 +42,7 @@ service<http> eventsDataService {
     resource deleteEvent (http:Connection conn,http:InRequest req, string name) {
         // Need to implement
     }
-    
+
 }
 
 

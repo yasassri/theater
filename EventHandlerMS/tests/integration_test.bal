@@ -9,6 +9,7 @@ import ballerina.data.sql;
 const string h2DbLocation = "./";
 const string h2Database = "EVENTS";
 string eventServiceEp;
+string addedEventID;
 
 
 @Description {value: "Before function to start the service"}
@@ -19,7 +20,6 @@ function startaEventService() {
     // Starting the service will initialize the DB in this sample app.
     io:println(eventServiceEp);
 }
-
 
 function truncateTable () {
     endpoint<sql:ClientConnector> ep {
@@ -48,48 +48,42 @@ function testAddEventWithValidPayload () {
                           "organizer_name": "Tyler",
                           "event_type": "Ballet"
                       };
-    json expectedResponse = {"Success":"Ballerina event is Created","id":"2"};
     http:OutRequest req = {};
     req.setJsonPayload(addEventPl);
 
     http:InResponse resp = {};
     resp, _ = httpEndpoint.post("/add", req);
     var p, err = resp.getJsonPayload();
-    io:println("DDDDDDDDD");
-    io:println(p);
 
     test:assertEquals(err, null, "Error while getting the Json payload");
-    test:assertEquals(p, expectedResponse, "Payload didn't match");
+
+    addedEventID = p.id.toString();
+    test:assertTrue(p.toString().contains("\"Success\":\"Ballerina event is Created\""), "Payload didn't match");
 }
 
+// If you want to guarantee that a particular test should be executed before this test we can use dependsOn attribute
 @Description {value: "Test Get events"}
 @test:config {
     dependsOn: ["testAddEventWithValidPayload"]
 }
-function testAGetEventService () {
+function testGetEventService () {
     // HTTP endpoint to call event service
     endpoint<http:HttpClient> httpEndpoint {
         create http:HttpClient(eventServiceEp, {});
     }
     eventServiceEp = test:startService("eventsDataService");
 
-    json addEventPl = {
-                          "name": "Ballerina",
-                          "start_time": "5.25",
-                          "venue": "WSO2",
-                          "organizer_name": "Tyler",
-                          "event_type": "Ballet"
-                      };
-
     http:OutRequest req = {};
     http:InResponse resp = {};
 
     resp, _ = httpEndpoint.get("/get", req);
     var p, err = resp.getJsonPayload();
-    io:println("XXXXXX=========+XXXXXXXXXXXX");
-    io:println(p);
-    //test:assertEquals(err, null, "Error while getting the Json payload");
-    //test:assertEquals(p, expectedResponse, "Payload didn't match");
+    test:assertEquals(p[0].ID.toString(), addedEventID, "Event IDs didn't match" );
 }
 
-
+@Description {value: "Stop the service"}
+@test:beforeSuite {}
+function stopEventService() {
+    // Starting the service will initialize the DB in this sample app.
+    io:println("Stopping the service!");
+}
