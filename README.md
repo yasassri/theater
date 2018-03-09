@@ -2,8 +2,23 @@
 
 A ballerina based Theatre manager which handles events and issuance of tickets.
 
-
 This sample is intended to  demonstrate testerina capabilities.
+
+## Overview
+
+Theatre app contains of 3 micro services.
+
+### Portal (Composite service)
+
+Portal acts as the composite service which does the plumbing between different micro-services. (Ticketing, Event and external services). Only the potal app will be exposed to the users. 
+
+### EventHandlerMS
+
+This service is responsible for handling event registering/ retrieving related request. 
+
+### TicketingMS
+
+This service is responsible for handling ticketing related operations. 
 
 
 # How to get the sample up and Running
@@ -115,4 +130,6 @@ Response
 ````
 
 ### Purchasing Tickets
+
+Send a Post request to 
 
