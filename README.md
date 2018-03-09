@@ -35,7 +35,7 @@ Following sequence diagram depicts the event registration message flow.
 
 Following sequence diagram depicts the ticket purchasing message flow.
 
-![Alt text](resources/images/EventRegisterFlow_2.png?raw=true "Purchase Ticket")
+![Alt text](resources/images/PurchasingFlow_2.png?raw=true "Purchase Ticket")
 
 #### Purchase Ticket Message flow
 
