@@ -6,9 +6,11 @@ This sample is intended to  demonstrate testerina capabilities.
 
 ## Overview
 
-Theatre app contains 3 micro services.
+Theatre app contains 3 micro services. Following is the micro-services component architecture each service follows.
 
-### Componenets
+![Alt text](resources/images/MSArchitecture.png?raw=true "Register Event")
+
+### Components
 
 #### Portal (Composite service)
 
