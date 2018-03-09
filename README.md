@@ -6,20 +6,34 @@ This sample is intended to  demonstrate testerina capabilities.
 
 ## Overview
 
-Theatre app contains of 3 micro services.
+Theatre app contains 3 micro services.
 
-### Portal (Composite service)
+### Componenets
+
+#### Portal (Composite service)
 
 Portal acts as the composite service which does the plumbing between different micro-services. (Ticketing, Event and external services). Only the potal app will be exposed to the users. 
 
-### EventHandlerMS
+#### EventHandlerMS
 
 This service is responsible for handling event registering/ retrieving related request. 
 
-### TicketingMS
+#### TicketingMS
 
 This service is responsible for handling ticketing related operations. 
 
+
+### Message Flows
+
+#### Register Event Message flow
+
+![Alt text](resources/images/EventRegisterFlow_2.png?raw=true "Register Event")
+
+#### Prchase Ticket Message flow
+
+![Alt text](resources/images/EventRegisterFlow_2.png?raw=true "Purchase Ticket")
+
+#### Purchase Ticket Message flow
 
 # How to get the sample up and Running
 
@@ -131,5 +145,22 @@ Response
 
 ### Purchasing Tickets
 
-Send a Post request to 
+Send a Post request to portal endpoint
+````
+http://localhost:9090/portal/purchase
+````
 
+````json
+{
+  "eventId": {Event_ID},
+  "ticket_type": "BOX",
+  "noOfTickets": 5,
+  "cardInfo": 
+    {
+      "cardNo": 5242536514,
+      "cvcNo": 526,
+      "expireDate": "11/2018",
+      "cardHolderName": "Yasassri Ratnayake"
+    }
+}
+````
