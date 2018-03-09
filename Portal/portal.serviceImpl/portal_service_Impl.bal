@@ -4,6 +4,7 @@ import ballerina.net.http;
 import portal.connectors as con;
 import portal.model as mod;
 import portal.utils as util;
+import ballerina.io;
 
 public function hadleGetEvents () (http:OutResponse res) {
 
@@ -41,15 +42,13 @@ public function handleAddTickets (json jsonPayload) (http:OutResponse res) {
 
         // Constrct the request JSon
         json js = {
+                      "id":0,
                       "ticket_type":ticket.ticket_type,
-                      "eventId":i,
-                      "total_tickets":ticket.total,
-                      "booked_tickets":ticket.booked,
+                      "event_id":i,
+                      "total":ticket.total,
+                      "booked":ticket.booked,
                       "price":ticket.price
                   };
-        // ticket.event_id = i;
-        // var js, err = <json>ticket;
-        // IF error we need to revert the process
         var addTicketres = con:addTicket(js);
     }
     // To-DO: If ticket adding fails the event should be rolled back

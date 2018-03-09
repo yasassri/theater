@@ -14,7 +14,7 @@ public function addEvent (json payload) (json, int) {
     http:OutRequest req = {};
     req.setJsonPayload(payload);
     var resp, e = httpEndpoint.post("/events/add", req);
-    var jsonPayload, _ = req.getJsonPayload();
+    var jsonPayload, _ = resp.getJsonPayload();
     return jsonPayload, resp.statusCode;
 }
 

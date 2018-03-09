@@ -1,7 +1,7 @@
-package ticketing.persistance;
+package ticketing.persistence;
 
 import ballerina.io;
-import src.model as mod;
+import ticketing.model as mod;
 
 const string TABLE_NAME = "tickets";
 

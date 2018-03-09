@@ -13,7 +13,6 @@ import event.handler.model as mod;
 function mockAddNewEvent (mod:Event evnt) (json jsonResponse, error err) {
 
     if (evnt.name == "negative") {
-        io:println("Mock Service for 222222");
         err = {message:"Error"};
         return;
     }
@@ -70,10 +69,9 @@ function testInvalidPayload () {
 
     // Check whether there is an Error when getting the payload
     test:assertEquals(err, null, "There was an error when getting the JsonPayload");
-    // Assert the payload
-    test:assertEquals(jsonPayload, actualResponse, "Response Didn't match");
     // Assert the response code
     test:assertEquals(res.statusCode, 500, "Response Didn't match");
+    test:assertTrue(jsonPayload.toString().contains("There was a Error"),"Response didn't match");
 }
 
 

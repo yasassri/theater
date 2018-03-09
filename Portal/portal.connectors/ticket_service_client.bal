@@ -16,7 +16,12 @@ public function addTicket (json payload) (json resPl) {
     http:InResponse resp = {};
     req.setJsonPayload(payload);
     resp, _ = httpEndpoint.post("/tickets/add", req);
-    resPl, _ = resp.getJsonPayload();
+    error e;
+    resPl, e = resp.getJsonPayload();
+    io:println("DDDDDDDDDDDDDDDDDDDDd");
+    io:println(resPl);
+    io:println(e);
+
     return;
 }
 

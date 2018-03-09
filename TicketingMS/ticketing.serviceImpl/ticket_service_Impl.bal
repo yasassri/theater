@@ -3,7 +3,7 @@ package ticketing.serviceImpl;
 import ballerina.io;
 import ballerina.net.http;
 import ticketing.model as mod;
-import ticketing.persistance as db;
+import ticketing.persistence as db;
 import ticketing.utils as util;
 
 public function hadleGetTicketsByEventId (int eventId) (http:OutResponse res) {
@@ -26,6 +26,8 @@ public function handleAddTickets (json jsonPayload) (http:OutResponse res) {
 
     res = {};
     var ticket, err = <mod:Ticket>jsonPayload;
+    io:println(jsonPayload);
+    io:println(err);
 
     if (err != null) {
         // The payload is not what we expected
