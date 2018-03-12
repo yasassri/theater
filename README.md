@@ -263,9 +263,9 @@ http://localhost:9090/portal/purchase
 ### Testerina Basics
 Testerina is made with few components,
 
-Assertions
-Mocks
-Helper Functions
+- Assertions
+- Mocks
+- Helper Functions
 
 #### Assertions
 Assertions are used to verify the outcome of a ballerina function program against the actual expected outcome. You can read more about assertions from the main user guides.
@@ -273,17 +273,17 @@ Assertions are used to verify the outcome of a ballerina function program agains
 #### Mocks
 Testerina allows you to create mocks or doubles at different layers for testing you application in the most efficient way. Using ballerina we can create,
 
-Function Mocks.
-Service Mocks.
-DB mocks. (Only supports H2 database)
+- Function Mocks.
+- Service Mocks.
+- DB mocks. (Only supports H2 database)
 
 #### Helper Functions
 
 Helper functions allow you to control ballerina tests, services and programs, Currently Testerina has the following helper functions.
 
-Data providers.
-Before and After test functions
-Service management.
+- Data providers.
+- Before and After test functions
+- Service management.
 
 ### Writing a Testable Ballerina Application.
 
@@ -300,15 +300,15 @@ Maintain proper granularity and component isolation.
 
 When testing a complete ballerina application we can perform the tests in three distinct layers. 
 
-Unit layer.
+#### Unit layer.
 
 An unit represents an isolated code fragment that can be tested without any external dependencies. For example, A function which adds two numbers and return the sum. You can refer the utility function tests of the Theatre application. 
 
-Component Integration layer.
+#### Component Integration layer.
 
 We can perform component integration tests when multiple components integrate with each other. For e.g: Persistence layer interacting with the DB, Service layer interacting with the service implementations etc. Refer the service tests in the Theatre application.
 
-System integration layer.
+#### System integration layer.
 
 System integration layer represents a production equivalent deployment of the entire solution. The system integration will mimic the actual production deployment and perform tests on top of this environment. You can refer integration test module to get an understanding about system integration tests. 
 Identify Testable Components of the Theatre app.
