@@ -7,10 +7,10 @@ import event.handler.model as mod;
 import event.handler.utils as util;
 
 // Service implementation to handle get service request
-public function handleGetAllEventRequest (http:InRequest req)(http:OutResponse res) {
+public function handleGetAllEventRequest (http:Request req)(http:Response res) {
     res = {};
     var pl, err = persist:getAllEvents();
-    if (err != null) {    
+    if (err != null) {
         res.setJsonPayload(err.message);
         res.statusCode = 500;
         return;
@@ -23,7 +23,7 @@ public function handleGetAllEventRequest (http:InRequest req)(http:OutResponse r
 // Service implementation to handle get service request
 // Parsing a function pointer to make it testable
 public function handleAddEvent (json jsonPayload)
-                               (http:OutResponse res) {
+                               (http:Response res) {
     res = {};
     var event, err = <mod:Event> jsonPayload;
         if (err != null) {
@@ -32,10 +32,10 @@ public function handleAddEvent (json jsonPayload)
             res.statusCode = 500;
             return;
         }
-    
+
     var payload, err = persist:addNewEvent(event);
 
-    if (err != null) {    
+    if (err != null) {
         res.setJsonPayload(util:generateJsonFromError(err));
         res.statusCode = 500;
         return;

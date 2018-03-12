@@ -7,15 +7,13 @@ const string tableName = "events";
 const string getAllEventsQuery = "SELECT * from " + tableName;
 
 public function addNewEvent(mod:Event event) (json jsonResponse,error err) {
-    endpoint<sql:ClientConnector> ep {
-    }
-    bind sqlCon with ep;
+
     sql:Parameter[] params = [];
     sql:Parameter para1 = {sqlType:sql:Type.VARCHAR,value:event.name};
     sql:Parameter para2 = {sqlType:sql:Type.VARCHAR,value:event.start_time};
     sql:Parameter para3 = {sqlType:sql:Type.VARCHAR,value:event.venue};
     sql:Parameter para4 = {sqlType:sql:Type.VARCHAR,value:event.organizer_name};
-    
+
     // First Check if existing event is present.
     var existingID = getEventIDByName(event.name);
     io:println(existingID);
@@ -25,8 +23,8 @@ public function addNewEvent(mod:Event event) (json jsonResponse,error err) {
     }
 
     params = [para1,para2,para3,para4];
-    int ret = ep.update("INSERT INTO " + tableName + " (NAME,START_TIME,VENUE,ORGANIZER_NAME) VALUES (?,?,?,?)",params);
-    
+    int ret = dbEP -> update("INSERT INTO " + tableName + " (NAME,START_TIME,VENUE,ORGANIZER_NAME) VALUES (?,?,?,?)",params);
+
     if (ret == 1) {
         jsonResponse = {"Success":event.name + " event is Created", "id" : getEventIDByName(event.name)};
     } else {
@@ -35,16 +33,16 @@ public function addNewEvent(mod:Event event) (json jsonResponse,error err) {
     return jsonResponse ,err;
 }
 
-// Get the event ID by Name
+ //Get the event ID by Name
 public function getEventIDByName (string name)(string id) {
 
-endpoint<sql:ClientConnector> ep{}
-bind sqlCon with ep;
+//endpoint<sql:Client> ep{}
+//bind sqlCon with ep;
 
 sql:Parameter[] params = [];
 sql:Parameter para1 = {sqlType:sql:Type.VARCHAR,value:name};
 params = [para1];
-table dt = ep.select("SELECT ID FROM " + tableName + " WHERE NAME = ?", params, null);
+table dt = dbEP -> select("SELECT ID FROM " + tableName + " WHERE NAME = ?", params, null);
 
 var jsonRes,err = <json>dt;
 if (lengthof jsonRes > 0) {
@@ -53,15 +51,15 @@ id = jsonRes[0].ID.toString();
     id = "0";
 }
 //id = jsonRes.id.toString();
-return;    
+return;
 }
 
 // Get all events
 public function getAllEvents() (json,error) {
-    endpoint<sql:ClientConnector> ep{
-    }
-    bind sqlCon with ep;
-    table dt = ep.select(getAllEventsQuery,null,null);
+    //endpoint<sql:Client> ep{
+    //}
+    //bind sqlCon with ep;
+    table dt = dbEP -> select(getAllEventsQuery,null,null);
     error err;
     var res,err = <json>dt;
     return res ,err;

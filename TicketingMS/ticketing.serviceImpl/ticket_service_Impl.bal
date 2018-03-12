@@ -6,7 +6,7 @@ import ticketing.model as mod;
 import ticketing.persistence as db;
 import ticketing.utils as util;
 
-public function hadleGetTicketsByEventId (int eventId) (http:OutResponse res) {
+public function hadleGetTicketsByEventId (int eventId) (http:Response res) {
 
     res = {};
     var pl, err = db:getTicketCountByEventId(eventId);
@@ -22,7 +22,7 @@ public function hadleGetTicketsByEventId (int eventId) (http:OutResponse res) {
 }
 
 // Handle Ticket adding flow.
-public function handleAddTickets (json jsonPayload) (http:OutResponse res) {
+public function handleAddTickets (json jsonPayload) (http:Response res) {
 
     res = {};
     var ticket, err = <mod:Ticket>jsonPayload;
@@ -48,7 +48,7 @@ public function handleAddTickets (json jsonPayload) (http:OutResponse res) {
 }
 
 
-public function handlePurchaseTickets (json jsonPayload) (http:OutResponse res) {
+public function handlePurchaseTickets (json jsonPayload) (http:Response res) {
 
     res = {};
     var ticket, err = <mod:Ticket>jsonPayload;
@@ -72,7 +72,7 @@ public function handlePurchaseTickets (json jsonPayload) (http:OutResponse res) 
 
 
 // Handle Update ticket
-public function handleUpdateTickets (string id, string count) (http:OutResponse res) {
+public function handleUpdateTickets (string id, string count) (http:Response res) {
     res = {};
     var i, _ = <int>id;
     var c, _ = <int>count;

@@ -51,10 +51,10 @@ function testAddEventServiceWithValidPayload () {
                           "event_type": "Ballet"
                       };
     json expectedResponse = {"Success":"Ballerina event is Created","id":"2"};
-    http:OutRequest req = {};
+    http:Request req = {};
     req.setJsonPayload(addEventPl);
 
-    http:InResponse resp = {};
+    http:Response resp = {};
     resp, _ = httpEndpoint.post("/add", req);
     var p, err = resp.getJsonPayload();
 

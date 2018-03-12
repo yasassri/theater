@@ -11,26 +11,21 @@ const string h2Password = "root";
 // Above will be replaced from the config API as below
 // string mysqlHostName = config:getGlobalValue("database.host");
 
-public sql:ClientConnector sqlCon = initDb();
+public endpoint<sql:Client> dbEP { database: sql:DB.H2_FILE, host: h2DbLocation,port: 0,name: h2Database,username: h2UserName,password: h2Password}
 
-function initDb () (sql:ClientConnector connInit) {
+// Done as a workaround to init the Database                                                                                                                                        //
+string c = initializeDB();
 
-    sql:ConnectionProperties propertiesInit = {maximumPoolSize:5, connectionTimeout:300000, datasourceProperties: null};
-    connInit = create sql:ClientConnector(sql:DB.H2_FILE, h2DbLocation, h2Port, h2Database, h2UserName, h2Password, propertiesInit);
-    initializeDB(connInit);
-    return;
-}
-
-function initializeDB (sql:ClientConnector connInit) {
-    endpoint<sql:ClientConnector> ep {
-    }
-    bind connInit with ep;
+function initializeDB ()(string a) {
+    endpoint<sql:Client> dbEP2 { database: sql:DB.H2_FILE, host: h2DbLocation,port: 0,name: h2Database,username: h2UserName,password: h2Password}
     string query = "CREATE TABLE IF NOT EXISTS EVENTS(ID INT AUTO_INCREMENT, NAME VARCHAR(255) UNIQUE, START_TIME
     VARCHAR(255), VENUE VARCHAR(255), ORGANIZER_NAME VARCHAR(255), PRIMARY KEY (ID))";
-    int ret = ep.update(query, null);
-
+    int ret = dbEP2 -> update(query, null);
+    io:println("Initializing DB");
+    a = "Yes";
     if (ret != 0) {
         error e = {message: "Error occured while initializing the DB"};
-        throw e;
+        //throw e;
     }
+    return;
 }

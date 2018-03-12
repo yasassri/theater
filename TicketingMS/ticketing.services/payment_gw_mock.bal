@@ -2,19 +2,22 @@ package ticketing.services;
 
 import ballerina.net.http;
 
-@http:configuration {
-    basePath:"/boc",
-    port:9094
+endpoint<http:Service> paymentGWEP {
+port:9094
 }
-service<http> PaymentService {
+
+@http:serviceConfig {
+      endpoints:[paymentGWEP], basePath:"/boc"
+}
+service<http:Service> PaymentService {
     @http:resourceConfig {
         methods:["POST"],
         path:"/payment"
     }
 
-    resource creditOperations (http:Connection conn, http:InRequest req, string eventID) {
+    resource creditOperations (http:ServerConnector conn, http:Request req, string eventID) {
         // Expects an API Token
-        http:OutResponse res = {};
+        http:Response res = {};
 
         // Service expects following Json
         //{
@@ -30,6 +33,6 @@ service<http> PaymentService {
         json jsonRes = {"Payment":"Sucess!"};
         res.statusCode = 200;
         res.setJsonPayload(jsonRes);
-        _ = conn.respond(res);
+        _ = conn -> respond(res);
     }
 }

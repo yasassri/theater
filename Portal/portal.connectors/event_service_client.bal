@@ -9,22 +9,24 @@ const string eventServiceEPC = config:getGlobalValue("event.endpoint");
 
 public function addEvent (json payload) (json, int) {
 
-    endpoint<http:HttpClient> httpEndpoint {create http:HttpClient(eventServiceEP, {});
+    endpoint<http:Client> clientEP {
+        serviceUri: eventServiceEP
     }
-    http:OutRequest req = {};
+    http:Request req = {};
     req.setJsonPayload(payload);
-    var resp, e = httpEndpoint.post("/events/add", req);
+    var resp, e = clientEP -> post("/events/add", req);
     var jsonPayload, _ = resp.getJsonPayload();
     return jsonPayload, resp.statusCode;
 }
 
 public function getEvents () (json resPl) {
 
-    endpoint<http:HttpClient> httpEndpoint {create http:HttpClient(eventServiceEP, {});
+    endpoint<http:Client> clientEP {
+        serviceUri: eventServiceEP
     }
-    http:OutRequest req = {};
-    http:InResponse resp = {};
-    resp, _ = httpEndpoint.get("/events/get", req);
+    http:Request req = {};
+    http:Response resp = {};
+    resp, _ = clientEP -> get("/events/get", req);
     resPl, _ = resp.getJsonPayload();
     return;
 }

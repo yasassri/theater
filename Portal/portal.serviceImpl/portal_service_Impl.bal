@@ -6,7 +6,7 @@ import portal.model as mod;
 import portal.utils as util;
 import ballerina.io;
 
-public function hadleGetEvents () (http:OutResponse res) {
+public function hadleGetEvents () (http:Response res) {
 
     // Here we need to call the Event Service
     res = {};
@@ -16,7 +16,7 @@ public function hadleGetEvents () (http:OutResponse res) {
     return;
 }
 
-public function handleAddTickets (json jsonPayload) (http:OutResponse res) {
+public function handleAddTickets (json jsonPayload) (http:Response res) {
 
     res = {};
     var payLoad, err2 = <mod:AddEvent>jsonPayload;
@@ -56,7 +56,7 @@ public function handleAddTickets (json jsonPayload) (http:OutResponse res) {
     return;
 }
 
-public function handleGetTickets (string id) (http:OutResponse res) {
+public function handleGetTickets (string id) (http:Response res) {
     res = {};
     var a = con:getTicket(id);
     res.setJsonPayload(a);
@@ -64,7 +64,7 @@ public function handleGetTickets (string id) (http:OutResponse res) {
 }
 
 
-public function handlePurchaseTickets (json jsonPayload) (http:OutResponse res) {
+public function handlePurchaseTickets (json jsonPayload) (http:Response res) {
     res = {};
     var c, err = <mod:PurchaseTicket>jsonPayload;
     if (err != null) {
