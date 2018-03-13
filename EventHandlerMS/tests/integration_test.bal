@@ -22,12 +22,10 @@ function startaEventService() {
 }
 
 function truncateTable () {
-    endpoint<sql:ClientConnector> ep {
-        create sql:ClientConnector(sql:DB.H2_FILE, h2DbLocation, 0, h2Database, "root", "root", null);
-    }
+    endpoint<sql:ClientConnector> ep { database: sql:DB.H2_FILE, host: dbLocation,port: 0,name: h2Database,username: "root",password: "root"}
     io:println("Truncating the table");
     // Truncate the table to make sure data doesn't exist.
-    var a = ep.update("TRUNCATE TABLE EVENTS", null);
+    var a = ep -> update("TRUNCATE TABLE EVENTS", null);
 }
 
 
@@ -36,9 +34,8 @@ function truncateTable () {
 }
 function testAddEventWithValidPayload () {
     // HTTP endpoint to call event service
-    endpoint<http:HttpClient> httpEndpoint {
-        create http:HttpClient(eventServiceEp, {});
-    }
+    endpoint<http:Client> httpEndpoint { serviceUri: eventServiceEp }
+
     eventServiceEp = test:startService("eventsDataService");
 
     json addEventPl = {
@@ -48,11 +45,11 @@ function testAddEventWithValidPayload () {
                           "organizer_name": "Tyler",
                           "event_type": "Ballet"
                       };
-    http:OutRequest req = {};
+    http:Request req = {};
     req.setJsonPayload(addEventPl);
 
-    http:InResponse resp = {};
-    resp, _ = httpEndpoint.post("/add", req);
+    http:Response resp = {};
+    resp, _ = httpEndpoint -> post("/add", req);
     var p, err = resp.getJsonPayload();
 
     test:assertEquals(err, null, "Error while getting the Json payload");
@@ -68,8 +65,8 @@ function testAddEventWithValidPayload () {
 }
 function testGetEventService () {
     // HTTP endpoint to call event service
-    endpoint<http:HttpClient> httpEndpoint {
-        create http:HttpClient(eventServiceEp, {});
+  endpoint<http:Client> clientEP {
+        serviceUri: eventServiceEp
     }
     eventServiceEp = test:startService("eventsDataService");
 

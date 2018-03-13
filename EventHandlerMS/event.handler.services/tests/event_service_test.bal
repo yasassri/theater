@@ -39,8 +39,8 @@ function startaEventService() {
 @test:config {}
 function testAddEventServiceWithValidPayload () {
     // HTTP endpoint to call event service
-    endpoint<http:HttpClient> httpEndpoint {
-        create http:HttpClient(eventServiceEp, {});
+    endpoint<http:Client> httpEndpoint {
+       serviceUri: eventServiceEp
     }
 
     json addEventPl = {
