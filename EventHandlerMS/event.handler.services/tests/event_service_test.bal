@@ -31,12 +31,15 @@ function mockAddNewEvent (mod:Event evnt) (json jsonResponse, error err) {
 }
 
 @Description {value: "Before function to start the service"}
-@test:beforeSuite {}
+@test:beforeSuite
 function startaEventService() {
     eventServiceEp = test:startService("eventsDataService");
+    // Setting this temporarily till the endpoint is available
+    eventServiceEp = "http://localhost:9093/events";
+
 }
 
-@test:config {}
+@test:config
 function testAddEventServiceWithValidPayload () {
     // HTTP endpoint to call event service
     endpoint<http:Client> httpEndpoint {
@@ -55,7 +58,7 @@ function testAddEventServiceWithValidPayload () {
     req.setJsonPayload(addEventPl);
 
     http:Response resp = {};
-    resp, _ = httpEndpoint.post("/add", req);
+    resp, _ = httpEndpoint -> post("/add", req);
     var p, err = resp.getJsonPayload();
 
     test:assertEquals(err, null, "Error while getting the Json payload");

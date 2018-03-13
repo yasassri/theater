@@ -19,7 +19,7 @@ string c = initializeDB();
 function initializeDB ()(string a) {
     endpoint<sql:Client> dbEP2 { database: sql:DB.H2_FILE, host: h2DbLocation,port: 0,name: h2Database,username: h2UserName,password: h2Password}
     string query = "CREATE TABLE IF NOT EXISTS EVENTS(ID INT AUTO_INCREMENT, NAME VARCHAR(255) UNIQUE, START_TIME
-    VARCHAR(255), VENUE VARCHAR(255), ORGANIZER_NAME VARCHAR(255), PRIMARY KEY (ID))";
+    VARCHAR(255) NOT NULL, VENUE VARCHAR(10) NOT NULL, ORGANIZER_NAME VARCHAR(255) NOT NULL, PRIMARY KEY (ID))";
     int ret = dbEP2 -> update(query, null);
     io:println("Initializing DB");
     a = "Yes";

@@ -36,7 +36,7 @@ function testValidPayload () {
                            };
     json actualResponse = {"Success":"Ballerina50 event is Created", "id":"2"};
 
-    http:OutResponse res = {};
+    http:Response res = {};
     //
     res = handleAddEvent(addEventPayLoad);
 
@@ -63,7 +63,7 @@ function testInvalidPayload () {
 
     json actualResponse = {"There was a Error":"cannot convert 'json' to type 'src.model:Event': error while mapping 'venue': no such field found in json"};
 
-    http:OutResponse res = {};
+    http:Response res = {};
     res = handleAddEvent(addEventPayLoad);
     var jsonPayload, err = res.getJsonPayload();
 
@@ -88,7 +88,7 @@ function testErrorReturnedFromDb () {
                            };
     json actualResponse = {"There was a Error":"Error"};
 
-    http:OutResponse res = {};
+    http:Response res = {};
     res = handleAddEvent(addEventPayLoad);
     var jsonPayload, err = res.getJsonPayload();
     test:assertEquals(err, null, "There was an error when getting the JsonPayload");
