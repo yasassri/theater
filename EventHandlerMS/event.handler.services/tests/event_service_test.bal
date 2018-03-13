@@ -36,7 +36,6 @@ function startaEventService() {
     eventServiceEp = test:startService("eventsDataService");
     // Setting this temporarily till the endpoint is available
     eventServiceEp = "http://localhost:9093/events";
-
 }
 
 @test:config

@@ -11,21 +11,22 @@ const string h2Database = "EVENTS";
 string eventServiceEp;
 string addedEventID;
 
+public endpoint<sql:Client> dbEP2 { database: sql:DB.H2_FILE, host: h2DbLocation,port: 0,name: h2Database,username: "root",password: "root"}
 
 @Description {value: "Before function to start the service"}
-@test:beforeSuite {}
+@test:beforeSuite
 function startaEventService() {
     // Starting the EventDataService
     eventServiceEp = test:startService("eventsDataService");
     // Starting the service will initialize the DB in this sample app.
+    eventServiceEp= "http://localhost:9093/events";
     io:println(eventServiceEp);
 }
 
 function truncateTable () {
-    endpoint<sql:ClientConnector> ep { database: sql:DB.H2_FILE, host: dbLocation,port: 0,name: h2Database,username: "root",password: "root"}
     io:println("Truncating the table");
     // Truncate the table to make sure data doesn't exist.
-    var a = ep -> update("TRUNCATE TABLE EVENTS", null);
+    var a = dbEP2 -> update("TRUNCATE TABLE EVENTS", null);
 }
 
 
@@ -36,7 +37,6 @@ function testAddEventWithValidPayload () {
     // HTTP endpoint to call event service
     endpoint<http:Client> httpEndpoint { serviceUri: eventServiceEp }
 
-    eventServiceEp = test:startService("eventsDataService");
 
     json addEventPl = {
                           "name": "Ballerina",
@@ -47,13 +47,9 @@ function testAddEventWithValidPayload () {
                       };
     http:Request req = {};
     req.setJsonPayload(addEventPl);
-
-    http:Response resp = {};
-    resp, _ = httpEndpoint -> post("/add", req);
-    var p, err = resp.getJsonPayload();
-
-    test:assertEquals(err, null, "Error while getting the Json payload");
-
+    var resp, err1 = httpEndpoint -> post("/add", req);
+    var p, err2 = resp.getJsonPayload();
+    test:assertEquals(err2, null, "Error while getting the Json payload");
     addedEventID = p.id.toString();
     test:assertTrue(p.toString().contains("\"Success\":\"Ballerina event is Created\""), "Payload didn't match");
 }
@@ -65,21 +61,21 @@ function testAddEventWithValidPayload () {
 }
 function testGetEventService () {
     // HTTP endpoint to call event service
-  endpoint<http:Client> clientEP {
+  endpoint<http:Client> httpEndpoint {
         serviceUri: eventServiceEp
     }
-    eventServiceEp = test:startService("eventsDataService");
 
-    http:OutRequest req = {};
-    http:InResponse resp = {};
-
-    resp, _ = httpEndpoint.get("/get", req);
+    http:Request req = {};
+    var resp, ex = httpEndpoint -> get("/get", req);
     var p, err = resp.getJsonPayload();
-    test:assertEquals(p[0].ID.toString(), addedEventID, "Event IDs didn't match" );
+
+    if (p[0].ID != null) {
+        test:assertEquals(p[0].ID.toString(), addedEventID, "Event IDs didn't match" );
+    }
 }
 
 @Description {value: "Stop the service"}
-@test:beforeSuite {}
+@test:afterSuite
 function stopEventService() {
     // Starting the service will initialize the DB in this sample app.
     io:println("Stopping the service!");
