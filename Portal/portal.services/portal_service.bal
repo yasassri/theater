@@ -4,53 +4,53 @@ import ballerina.net.http;
 import portal.serviceImpl as impl;
 
 
-endpoint<http:Service> portalEP {
+endpoint http:ServiceEndpoint portalEP {
              port: 9090
-         }
+         };
 
-@http:serviceConfig {
-    endpoints:[portalEP], basePath: "/portal"
+@http:ServiceConfig {
+     basePath: "/portal"
 }
-service<http:Service> PortalService {
+service<http:Service> PortalService bind portalEP {
 
-    @http:resourceConfig {
+    @http:ResourceConfig {
         methods:["GET"],
         path:"events"
     }
 
-    resource getEvents (http:ServerConnector conn, http:Request req) {
-        _ = conn -> respond(impl:hadleGetEvents());
+     getEvents (endpoint conn, http:Request req) {
+        _ = conn -> forward(impl:hadleGetEvents());
     }
 
-    @http:resourceConfig {
+    @http:ResourceConfig {
         methods:["POST"],
         path:"events"
     }
-    resource addTickets (http:ServerConnector conn, http:Request req) {
+     addTickets (endpoint conn, http:Request req) {
 
         var jsonPayload, _ = req.getJsonPayload();
-        _ = conn -> respond(impl:handleAddTickets(jsonPayload));
+        _ = conn -> forward(impl:handleAddTickets(jsonPayload));
     }
 
-    @http:resourceConfig {
+    @http:ResourceConfig {
         methods:["GET"],
         path:"tickets/{eventId}"
     }
-    resource getTickets (http:ServerConnector conn, http:Request req, string eventId) {
+     getTickets (endpoint conn, http:Request req, string eventId) {
 
-        _ = conn -> respond(impl:handleGetTickets(eventId));
+        _ = conn -> forward(impl:handleGetTickets(eventId));
     }
 
-    @http:resourceConfig {
+    @http:ResourceConfig {
         methods:["POST"],
         path:"purchase"
     }
-    resource buyTickets (http:ServerConnector conn, http:Request req) {
+     buyTickets (endpoint conn, http:Request req) {
 
         var jsonPayload, _ = req.getJsonPayload();
         var a = impl:handlePurchaseTickets(jsonPayload);
         // json jsonRes = ops:addTicketCountByEventId();
         // res.setJsonPayload(jsonRes);
-        _ = conn -> respond(a);
+        _ = conn -> forward(a);
     }
 }

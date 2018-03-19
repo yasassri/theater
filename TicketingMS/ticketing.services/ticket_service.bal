@@ -3,37 +3,35 @@ import ballerina.net.http;
 import ticketing.serviceImpl as impl;
 
 
-endpoint<http:Service> ticketServiceEP {
-port:9092
-}
+endpoint http:ServiceEndpoint ticketServiceEP { port:9092 };
 
-@http:serviceConfig {
-      endpoints:[ticketServiceEP], basePath:"/tickets"
+@http:ServiceConfig {
+      basePath:"/tickets"
 }
-service<http:Service> TicketDataService {
-    @http:resourceConfig {
+service <http:Service> TicketDataService bind ticketServiceEP {
+    @http:ResourceConfig {
         methods:["GET"],
         path:"get/{eventID}"
     }
-    resource getTickets (http:ServerConnector conn, http:Request req, string eventID) {
+    getTickets (endpoint conn, http:Request req, string eventID) {
         var id, _ = <int>eventID;
         _ = conn -> respond(impl:hadleGetTicketsByEventId(id));
     }
 
-    @http:resourceConfig {
+    @http:ResourceConfig {
         methods:["POST"],
         path:"add"
     }
-    resource addTickets (http:ServerConnector conn, http:Request req) {
+     addTickets (endpoint conn, http:Request req) {
         var jsonPayload, _ = req.getJsonPayload();
         _ = conn -> respond(impl:handleAddTickets(jsonPayload));
     }
 
-    @http:resourceConfig {
+    @http:ResourceConfig {
         methods:["POST"],
         path:"update/{ticketID}/{count}"
     }
-    resource updateTickets (http:ServerConnector conn, http:Request req, string ticketID, string count) {
+     updateTickets (endpoint conn, http:Request req, string ticketID, string count) {
         _ = conn -> respond(impl:handleUpdateTickets(ticketID, count));
     }
 }

@@ -5,38 +5,37 @@ import ballerina.net.http;
 
 import event.handler.serviceImpl as impl;
 
-endpoint<http:Service> eventServiceEP {
+endpoint http:ServiceEndpoint eventServiceEP {
              port:9093
-              }
+              };
 
-@http:serviceConfig { endpoints:[eventServiceEP], basePath:"/events" }
+@http:ServiceConfig { basePath:"/events" }
+service<http:Service> eventsDataService bind eventServiceEP {
 
-service<http:Service> eventsDataService {
-
-    @http:resourceConfig {
+    @http:ResourceConfig {
         methods:["POST"],
         path:"/add"
     }
-    resource addEvent (http:ServerConnector conn, http:Request req) {
+     addEvent (endpoint conn, http:Request req) {
         var jsonPayload, _ = req.getJsonPayload();
 
         _ = conn -> respond(impl:handleAddEvent(jsonPayload));
 
     }
 
-    @http:resourceConfig {
+    @http:ResourceConfig {
         methods:["GET"],
         path:"/get"
     }
-    resource getAllEvent (http:ServerConnector conn,http:Request req) {
+     getAllEvent (endpoint conn,http:Request req) {
         _ = conn -> respond(impl:handleGetAllEventRequest(req));
     }
 
-    @http:resourceConfig {
+    @http:ResourceConfig {
         methods:["DELETE"],
         path:"/delete/{name}"
     }
-    resource deleteEvent (http:ServerConnector conn,http:Request req, string name) {
+     deleteEvent (endpoint conn,http:Request req, string name) {
         // Need to implement
     }
 

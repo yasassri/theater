@@ -41,9 +41,9 @@ function startaEventService() {
 @test:config
 function testAddEventServiceWithValidPayload () {
     // HTTP endpoint to call event service
-    endpoint<http:Client> httpEndpoint {
-       serviceUri: eventServiceEp
-    }
+    endpoint http:ClientEndpoint httpEndpoint {
+       targets: [{uri:eventServiceEp}]
+    };
 
     json addEventPl = {
                           "name": "Ballerina",
@@ -60,6 +60,6 @@ function testAddEventServiceWithValidPayload () {
     resp, _ = httpEndpoint -> post("/add", req);
     var p, err = resp.getJsonPayload();
 
-    test:assertEquals(err, null, "Error while getting the Json payload");
-    test:assertEquals(p, expectedResponse, "Payload didn't match");
+    test:assertEquals(err, null, msg = "Error while getting the Json payload");
+    test:assertEquals(p, expectedResponse, msg = "Payload didn't match");
 }

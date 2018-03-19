@@ -7,10 +7,11 @@ import ballerina.net.http;
 const string ticketServiceEP = "http://localhost:9092";
 const string ticketServiceEPC = config:getGlobalValue("ticket.endpoint");
 
+                                       endpoint http:ClientEndpoint ticketClientEP {
+targets: [{uri:ticketServiceEP}]
+           };
+
 public function addTicket (json payload) (json resPl) {
-    endpoint<http:Client> ticketClientEP {
-        serviceUri: ticketServiceEP
-    }
 
     http:Request req = {};
     http:Response resp = {};
@@ -23,9 +24,6 @@ public function addTicket (json payload) (json resPl) {
 }
 
 public function getTicket (string id) (json resPl) {
-    endpoint<http:Client> ticketClientEP {
-        serviceUri: ticketServiceEP
-        }
 
     http:Request req = {};
     http:Response resp = {};
@@ -37,9 +35,6 @@ public function getTicket (string id) (json resPl) {
 
 //updateTicket
 public function updateTicket (int id, int count) (json resPl) {
-    endpoint<http:Client> ticketClientEP {
-        serviceUri: ticketServiceEP
-        }
 
     http:Request req = {};
     http:Response resp = {};

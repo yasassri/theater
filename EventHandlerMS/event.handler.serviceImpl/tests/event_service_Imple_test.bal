@@ -43,12 +43,12 @@ function testValidPayload () {
     var jsonPayload, err = res.getJsonPayload();
 
     // Check whether there is an Error when getting the payload
-    test:assertEquals(err, null, "There was an error when getting the JsonPayload");
+    test:assertEquals(err, null, msg = "There was an error when getting the JsonPayload");
     // Assert the payload
-    test:assertEquals(jsonPayload, actualResponse, "Response Didn't match");
+    test:assertEquals(jsonPayload, actualResponse, msg = "Response Didn't match");
 
     // assert the response code
-    test:assertEquals(res.statusCode, 200, "Response Didn't match");
+    test:assertEquals(res.statusCode, 200, msg = "Response Didn't match");
 }
 
 
@@ -68,10 +68,10 @@ function testInvalidPayload () {
     var jsonPayload, err = res.getJsonPayload();
 
     // Check whether there is an Error when getting the payload
-    test:assertEquals(err, null, "There was an error when getting the JsonPayload");
+    test:assertEquals(err, null, msg = "There was an error when getting the JsonPayload");
     // Assert the response code
-    test:assertEquals(res.statusCode, 500, "Response Didn't match");
-    test:assertTrue(jsonPayload.toString().contains("There was a Error"),"Response didn't match");
+    test:assertEquals(res.statusCode, 500, msg = "Response Didn't match");
+    test:assertTrue(jsonPayload.toString().contains("There was a Error"),msg = "Response didn't match");
 }
 
 
@@ -91,9 +91,9 @@ function testErrorReturnedFromDb () {
     http:Response res = {};
     res = handleAddEvent(addEventPayLoad);
     var jsonPayload, err = res.getJsonPayload();
-    test:assertEquals(err, null, "There was an error when getting the JsonPayload");
+    test:assertEquals(err, null, msg = "There was an error when getting the JsonPayload");
     // Assert the payload
-    test:assertEquals(jsonPayload, actualResponse, "Response Didn't match");
+    test:assertEquals(jsonPayload, actualResponse, msg = "Response Didn't match");
     // Assert the response code
-    test:assertEquals(res.statusCode, 500, "Response Didn't match");
+    test:assertEquals(res.statusCode, 500, msg = "Response Didn't match");
 }

@@ -36,25 +36,25 @@ public function testAddEventToDB () {
                       };
 
     var pl, err = addNewEvent(event);
-    test:assertEquals(err, null, "There was a error when adding Event to the DB.");
+    test:assertEquals(err, null, msg = "There was a error when adding Event to the DB.");
 
     // Asserting the DB
     table dt = dbEP -> select("SELECT * FROM " + tableName + " WHERE NAME = 'Ballerina'", null, null);
     var jsonResult, err2 = <json>dt;
 
-    test:assertEquals(err2, null, "There was a error when Querying the DB.");
+    test:assertEquals(err2, null, msg = "There was a error when Querying the DB.");
     json result = jsonResult[0];
 
     // Asserting results
-    test:assertNotEquals(result.ID, null, "");
-    test:assertEquals(result.NAME.toString(), event.name, "Element didn't match");
-    test:assertEquals(result.START_TIME.toString(), event.start_time, "Element didn't match");
-    test:assertEquals(result.VENUE.toString(), event.venue, "Element didn't match");
-    test:assertEquals(result.ORGANIZER_NAME.toString(), event.organizer_name, "Element didn't match");
+    test:assertNotEquals(result.ID, null);
+    test:assertEquals(result.NAME.toString(), event.name, msg = "Element didn't match");
+    test:assertEquals(result.START_TIME.toString(), event.start_time, msg = "Element didn't match");
+    test:assertEquals(result.VENUE.toString(), event.venue, msg = "Element didn't match");
+    test:assertEquals(result.ORGANIZER_NAME.toString(), event.organizer_name, msg = "Element didn't match");
 
     // Assert the json response return from the persist function
     json actualReturn = {"Success":"Ballerina event is Created", "id":result.ID.toString()};
-    test:assertEquals(pl, actualReturn, "Response didn't match");
+    test:assertEquals(pl, actualReturn, msg = "Response didn't match");
 }
 
 
@@ -70,9 +70,9 @@ public function testAddDuplicateEventToDB () {
                       };
 
     var pl, err = addNewEvent(event);
-    test:assertEquals(err, null, "There was a error when adding Event to the DB.");
+    test:assertEquals(err, null, msg = "There was a error when adding Event to the DB.");
     var pl2, err2 = addNewEvent(event);
-    test:assertNotEquals(err2, null, "Error was expected");
+    test:assertNotEquals(err2, null, msg = "Error was expected");
 }
 
 @Description {value:"Tests adding a invalid events to the EVENTS table"}
@@ -88,7 +88,7 @@ public function testAddInvalidEventToDB () {
     // Negative test which expects a error
     try {
         var pl, err = addNewEvent(event);
-        test:assertFail("No Error occured while adding a invalid entry");
+        test:assertFail(msg = "No Error occured while adding a invalid entry");
     } catch (error e) {}
 }
 
@@ -105,7 +105,7 @@ public function testAddInvalidVenueToDB () {
     // Negative test which expects a error
     try {
         var pl, err = addNewEvent(event);
-        test:assertFail("No Error occured while adding a invalid entry");
+        test:assertFail(msg = "No Error occured while adding a invalid entry");
     } catch (error e) {
         io:println(e);
     }

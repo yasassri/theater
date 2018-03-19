@@ -13,8 +13,8 @@ public function testEventModel () {
     organizer_name : "YCR"
     };
 
-   test:assertEquals(event.name, "Event Name", "The name didn't match.");
-   test:assertEquals(event.start_time, "15.25", "The time didn't match.");
-   test:assertEquals(event.venue, "WSO2", "The venue didn't match.");
-   test:assertEquals(event.organizer_name, "YCR", "The time didn't match.");
+   test:assertEquals(event.name, "Event Name", msg = "The name didn't match.");
+   test:assertEquals(event.start_time, "15.25", msg = "The time didn't match.");
+   test:assertEquals(event.venue, "WSO2", msg = "The venue didn't match.");
+   test:assertEquals(event.organizer_name, "YCR", msg = "The time didn't match.");
 }

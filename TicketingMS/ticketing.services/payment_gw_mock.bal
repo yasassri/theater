@@ -2,20 +2,20 @@ package ticketing.services;
 
 import ballerina.net.http;
 
-endpoint<http:Service> paymentGWEP {
+endpoint http:ServiceEndpoint paymentGWEP {
 port:9094
-}
+};
 
-@http:serviceConfig {
+@http:ServiceConfig {
       endpoints:[paymentGWEP], basePath:"/boc"
 }
-service<http:Service> PaymentService {
-    @http:resourceConfig {
+service<http:Service> PaymentService bind paymentGWEP {
+    @http:ResourceConfig {
         methods:["POST"],
         path:"/payment"
     }
 
-    resource creditOperations (http:ServerConnector conn, http:Request req, string eventID) {
+     creditOperations (endpoint conn, http:Request req, string eventID) {
         // Expects an API Token
         http:Response res = {};
 

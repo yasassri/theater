@@ -8,9 +8,11 @@ const string paymentGWServiceEP = "http://localhost:9094";
 const string paymentGWServiceEPC = config:getGlobalValue("payment.endpoint");
 
 public function makePayment (json payload) (json resPl, int status) {
-    endpoint<http:Client> paymentGWClientEP {
-        serviceUri: paymentGWServiceEP
-    }
+
+
+    endpoint http:ClientEndpoint paymentGWClientEP {
+            targets: [{uri:paymentGWServiceEP}]
+           };
 
     http:Request req = {};
     http:Response resp = {};

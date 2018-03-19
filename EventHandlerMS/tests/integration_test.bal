@@ -49,9 +49,9 @@ function testAddEventWithValidPayload () {
     req.setJsonPayload(addEventPl);
     var resp, err1 = httpEndpoint -> post("/add", req);
     var p, err2 = resp.getJsonPayload();
-    test:assertEquals(err2, null, "Error while getting the Json payload");
+    test:assertEquals(err2, null, msg = "Error while getting the Json payload");
     addedEventID = p.id.toString();
-    test:assertTrue(p.toString().contains("\"Success\":\"Ballerina event is Created\""), "Payload didn't match");
+    test:assertTrue(p.toString().contains("\"Success\":\"Ballerina event is Created\""), msg = "Payload didn't match");
 }
 
 // If you want to guarantee that a particular test should be executed before this test we can use dependsOn attribute
@@ -70,7 +70,7 @@ function testGetEventService () {
     var p, err = resp.getJsonPayload();
 
     if (p[0].ID != null) {
-        test:assertEquals(p[0].ID.toString(), addedEventID, "Event IDs didn't match" );
+        test:assertEquals(p[0].ID.toString(), addedEventID, msg = "Event IDs didn't match" );
     }
 }
 
