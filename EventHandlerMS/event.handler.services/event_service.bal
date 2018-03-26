@@ -1,7 +1,7 @@
 package event.handler.services;
 
-import ballerina.io;
-import ballerina.net.http;
+import ballerina/io;
+import ballerina/net.http;
 
 import event.handler.serviceImpl as impl;
 
@@ -17,10 +17,19 @@ service<http:Service> eventsDataService bind eventServiceEP {
         path:"/add"
     }
      addEvent (endpoint conn, http:Request req) {
-        var jsonPayload, _ = req.getJsonPayload();
 
-        _ = conn -> respond(impl:handleAddEvent(jsonPayload));
-
+        http:Response res = {};
+        var pl = req.getJsonPayload();
+        match pl {
+            error err => {
+                res.setJsonPayload(err.message);
+                res.statusCode = 500;
+            }
+            json jsonPayload => {
+                res = impl:handleAddEvent(jsonPayload);
+            }
+        }
+     _ = conn -> respond(res);
     }
 
     @http:ResourceConfig {

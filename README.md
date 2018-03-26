@@ -325,8 +325,6 @@ If we dive further into individual microservices, following is how a microservic
 
 As shown in the above illustration, the components can be isolated and tested separately. Mocking capabilities can be used when decoupling the functional flow from each layer. If we look at the package structure of the Theatre application, the packages are designed to isolate components. So these components can be controlled individually. 
 
-
-
 ### <a name="invoking"></a> Invoking the service 
 
 
@@ -334,16 +332,7 @@ As shown in the above illustration, the components can be isolated and tested se
 ### <a name="deploying-on-docker"></a> Deploying on Docker
 
 
-You can use the Ballerina executable archive (.balx) archive that we created above and create a docker image using either of the following commands. 
-```
-ballerina docker restful_service.balx  
-```
-
-Once you have created the docker image, you can run it using docker run. 
-
-```
-docker run -p <host_port>:9090 --name ballerina_restful_service -d restful_service:latest
-```
+(WIP)
 
 ### <a name="deploying-on-k8s"></a> Deploying on Kubernetes
 (Work in progress) 

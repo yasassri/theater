@@ -1,46 +1,60 @@
 package event.handler.serviceImpl;
 
-import ballerina.net.http;
-import ballerina.io;
+import ballerina/net.http;
+import ballerina/io;
+
 import event.handler.persistence as persist;
 import event.handler.model as mod;
 import event.handler.utils as util;
 
 // Service implementation to handle get service request
-public function handleGetAllEventRequest (http:Request req)(http:Response res) {
-    res = {};
-    var pl, err = persist:getAllEvents();
-    if (err != null) {
-        res.setJsonPayload(err.message);
-        res.statusCode = 500;
-        return;
-        }
-    res.setJsonPayload(pl);
+public function handleGetAllEventRequest (http:Request req) returns http:Response {
+
+    http:Response res = {};
+    var events = persist:getAllEvents();
+    //match events {
+    //    json payload => {
+    //        res.setJsonPayload(payload);
+    //        res.statusCode = 200;
+    //        return res;
+    //    }
+    //    error err => {
+    //        res.setJsonPayload(util:generateJsonFromError(err));
+    //        res.statusCode = 500;
+    //        return res;
+    //    }
+    //}
+    res.setJsonPayload(events);
     res.statusCode = 200;
-    return;   
+    return res;
 }
 
 // Service implementation to handle get service request
 // Parsing a function pointer to make it testable
-public function handleAddEvent (json jsonPayload)
-                               (http:Response res) {
-    res = {};
-    var event, err = <mod:Event> jsonPayload;
-        if (err != null) {
-            // The payload is not what we expected
+public function handleAddEvent (json jsonPayload) returns http:Response {
+
+    http:Response res = {};
+    var event =? <mod:Event> jsonPayload;
+    //match event {
+    //    json jEvent => {io:println("");}
+    //    error err => {
+    //        res.setJsonPayload(util:generateJsonFromError(err));
+    //        res.statusCode = 500;
+    //        return res;
+    //        }
+    //}
+
+    var persistResult = persist:addNewEvent(event);
+    match persistResult {
+        json payload => {
+            res.setJsonPayload(payload);
+            res.statusCode = 200;
+            return res;
+        }
+        error err => {
             res.setJsonPayload(util:generateJsonFromError(err));
             res.statusCode = 500;
-            return;
+            return res;
         }
-
-    var payload, err = persist:addNewEvent(event);
-
-    if (err != null) {
-        res.setJsonPayload(util:generateJsonFromError(err));
-        res.statusCode = 500;
-        return;
-       }
-    res.setJsonPayload(payload);
-    res.statusCode = 200;
-    return;   
+    }
 }
