@@ -1,48 +1,69 @@
 package portal.connectors;
 
-import ballerina.config;
-import ballerina.io;
-import ballerina.net.http;
+import ballerina/config;
+import ballerina/io;
+import ballerina/net.http;
 
 const string ticketServiceEP = "http://localhost:9092";
-const string ticketServiceEPC = config:getGlobalValue("ticket.endpoint");
+//const string ticketServiceEPC = config:getGlobalValue("ticket.endpoint");
 
-                                       endpoint http:ClientEndpoint ticketClientEP {
-targets: [{uri:ticketServiceEP}]
-           };
+endpoint http:ClientEndpoint ticketClientEP { targets: [{uri:ticketServiceEP}] };
 
-public function addTicket (json payload) (json resPl) {
+public function addTicket (json payload) returns json | error {
 
     http:Request req = {};
-    http:Response resp = {};
     req.setJsonPayload(payload);
-    resp, _ = ticketClientEP -> post("/tickets/add", req);
-    error e;
-    resPl, e = resp.getJsonPayload();
-
-    return;
+    var response = ticketClientEP -> post("/tickets/add", req);
+    match response {
+        http:Response resp =>  {
+            var js = resp.getJsonPayload();
+            match js {
+            error err => return err;
+            json j => return j;
+            }
+        }
+        http:HttpConnectorError er => {
+        error err = { message : er.message };
+        return err;
+        }
+    }
 }
 
-public function getTicket (string id) (json resPl) {
+public function getTicket (string id) returns json | error {
 
     http:Request req = {};
-    http:Response resp = {};
-    resp, _ = ticketClientEP -> get("/tickets/get/" + id, req);
-    resPl, _ = resp.getJsonPayload();
-    io:println(resPl);
-    return;
+    var response = ticketClientEP -> get("/tickets/get/" + id, req);
+    match response {
+        http:Response resp =>  {
+            var js = resp.getJsonPayload();
+            match js {
+                error err => return err;
+                json j => return j;
+            }
+        }
+        http:HttpConnectorError er => {
+            error err = { message : er.message };
+            return err;
+        }
+    }
 }
 
 //updateTicket
-public function updateTicket (int id, int count) (json resPl) {
+public function updateTicket (int id, int count) returns json | error {
 
     http:Request req = {};
-    http:Response resp = {};
-    resp, _ = ticketClientEP -> post("/tickets/update/" + id + "/" + count, req);
-    resPl, _ = resp.getJsonPayload();
-    return;
+    var response = ticketClientEP -> post("/tickets/update/" + id + "/" + count, req);
+    match response {
+        http:Response resp =>  {
+            var js = resp.getJsonPayload();
+            match js {
+                error err => return err;
+                json j => return j;
+            }
+        }
+        http:HttpConnectorError er => {
+            error err = { message : er.message };
+            return err;
+        }
+    }
 }
-
-
-
-

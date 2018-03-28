@@ -1,4 +1,4 @@
 package tests;
 
-import ballerina.io;
+import ballerina/io;
 

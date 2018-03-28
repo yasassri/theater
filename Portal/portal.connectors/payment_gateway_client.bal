@@ -1,24 +1,31 @@
 package portal.connectors;
 
 
-import ballerina.config;
-import ballerina.net.http;
+import ballerina/config;
+import ballerina/net.http;
 
 const string paymentGWServiceEP = "http://localhost:9094";
-const string paymentGWServiceEPC = config:getGlobalValue("payment.endpoint");
+//const string paymentGWServiceEPC = config:getGlobalValue("payment.endpoint");
 
-public function makePayment (json payload) (json resPl, int status) {
+public function makePayment (json payload) returns  error | null {
 
 
-    endpoint http:ClientEndpoint paymentGWClientEP {
-            targets: [{uri:paymentGWServiceEP}]
-           };
+    endpoint http:ClientEndpoint paymentGWClientEP { targets: [{uri:paymentGWServiceEP}] };
 
     http:Request req = {};
-    http:Response resp = {};
     req.setJsonPayload(payload);
-    resp, _ = paymentGWClientEP -> post("/boc/payment", req);
-    resPl, _ = resp.getJsonPayload();
-    status = resp.statusCode;
-    return;
+    var response = paymentGWClientEP -> post("/boc/payment", req);
+    match response {
+        http:Response resp =>  {
+            if (resp.statusCode != 200) {
+                error err = {message : "Couldn't complete the transaction to payment GW"};
+                return err;
+                  }
+            return null;
+        }
+        http:HttpConnectorError er => {
+            error err = { message : er.message };
+            return err;
+        }
+    }
 }

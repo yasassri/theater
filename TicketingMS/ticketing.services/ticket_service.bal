@@ -1,5 +1,6 @@
 package ticketing.services;
-import ballerina.net.http;
+import ballerina/net.http;
+
 import ticketing.serviceImpl as impl;
 
 
@@ -14,7 +15,7 @@ service <http:Service> TicketDataService bind ticketServiceEP {
         path:"get/{eventID}"
     }
     getTickets (endpoint conn, http:Request req, string eventID) {
-        var id, _ = <int>eventID;
+        var id =? <int>eventID;
         _ = conn -> respond(impl:hadleGetTicketsByEventId(id));
     }
 
@@ -23,7 +24,7 @@ service <http:Service> TicketDataService bind ticketServiceEP {
         path:"add"
     }
      addTickets (endpoint conn, http:Request req) {
-        var jsonPayload, _ = req.getJsonPayload();
+        var jsonPayload =? req.getJsonPayload();
         _ = conn -> respond(impl:handleAddTickets(jsonPayload));
     }
 

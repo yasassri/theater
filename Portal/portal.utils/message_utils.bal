@@ -4,28 +4,27 @@ import ballerina.io;
 import portal.model as mod;
 
 // Generates a Json error message from a provided error
-public function generateJsonFromError (error err) (json jErr) {
-    jErr = {"There was a Error":err.message};
+public function generateJsonFromError (error err) returns (json) {
+    json jErr = {"There was a Error":err.message};
     return;
 }
 
 // Generaates the Event Add reqest with the provided struct
-public function generateEventRequest (mod:AddEvent event) (json js) {
-    js = {"name":event.name, "start_time":event.start_time, "venue":event.venue, "organizer_name":event.organizer_name, "event_type":event.event_type};
-    return;
+public function generateEventRequest (mod:AddEvent event) returns json {
+    json js = {"name":event.name, "start_time":event.start_time, "venue":event.venue, "organizer_name":event
+                                                                           .organizer_name, "event_type":event.event_type};
+    return js;
 }
 
 // Get Ticket struct for a given Type
-public function getTicketByType (json js, string tType) (mod:Ticket ticketStruct, int id) {
+public function getTicketByType (json js, string tType) returns (mod:Ticket, int) {
 
-    ticketStruct = null;
-    error err;
     foreach ticket in js {
         if (ticket.ticket_type.toString() == tType) {
             io:println(ticket);
-            ticketStruct, err = <mod:Ticket>ticket;
-            id, _ = (int)ticket.id;
-            return;
+            var ticketStruct =? <mod:Ticket>ticket;
+            var id =? (int)ticket.id;
+            return (ticketStruct, id);
         }
     }
     return;

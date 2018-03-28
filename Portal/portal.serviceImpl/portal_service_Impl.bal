@@ -1,25 +1,26 @@
 package portal.serviceImpl;
 
-import ballerina.net.http;
+import ballerina/net.http;
+import ballerina/io;
+
 import portal.connectors as con;
 import portal.model as mod;
 import portal.utils as util;
-import ballerina.io;
 
-public function hadleGetEvents () (http:Response res) {
+public function hadleGetEvents () returns (http:Response) {
 
     // Here we need to call the Event Service
-    res = {};
+    http:Response res = {};
     // Need to improve to handle error case
-    json j = con:getEvents();
+    json j =? con:getEvents();
     res.setJsonPayload(j);
-    return;
+    return res;
 }
 
-public function handleAddTickets (json jsonPayload) (http:Response res) {
+public function handleAddTickets (json jsonPayload) returns (http:Response) {
 
-    res = {};
-    var payLoad, err2 = <mod:AddEvent>jsonPayload;
+    http:Response res = {};
+    var payLoad =? <mod:AddEvent>jsonPayload;
 
     // Now we need to extract event part from the Payload.
     json event = util:generateEventRequest(payLoad);
@@ -28,20 +29,17 @@ public function handleAddTickets (json jsonPayload) (http:Response res) {
     var tickets = payLoad.tickets;
 
     // Add the event first
-    var resp, status = con:addEvent(event);
+    var status = con:addEvent(event);
+    match status {
+        error addEvnterr => {}
+        json resp => {
 
-    if (status > 400) {
-        res.setJsonPayload(resp);
-        res.statusCode = status;
-        return;
-    }
-    // Now add the tickets.   
+    // Extracting the Event ID from the response
+    var i =? <int>resp.id.toString();
+    // Now add the tickets.
     foreach ticket in tickets {
-
-        var i, err = <int>resp.id.toString();
-
         // Constrct the request JSon
-        json js = {
+        json js2 = {
                       "id":0,
                       "ticket_type":ticket.ticket_type,
                       "event_id":i,
@@ -49,24 +47,28 @@ public function handleAddTickets (json jsonPayload) (http:Response res) {
                       "booked":ticket.booked,
                       "price":ticket.price
                   };
-        var addTicketres = con:addTicket(js);
+        var addTicketres = con:addTicket(js2);
     }
+
     // To-DO: If ticket adding fails the event should be rolled back
     res.setJsonPayload(resp);
-    return;
+    return res;
+    }
 }
 
-public function handleGetTickets (string id) (http:Response res) {
-    res = {};
+}
+
+public function handleGetTickets (string id) returns (http:Response) {
+    http:Response res = {};
     var a = con:getTicket(id);
     res.setJsonPayload(a);
     return;
 }
 
 
-public function handlePurchaseTickets (json jsonPayload) (http:Response res) {
-    res = {};
-    var c, err = <mod:PurchaseTicket>jsonPayload;
+public function handlePurchaseTickets (json jsonPayload) returns (http:Response) {
+    http:Response res = {};
+    var c =? <mod:PurchaseTicket>jsonPayload;
     if (err != null) {
         res.setJsonPayload(err.message);
         return;
@@ -74,7 +76,7 @@ public function handlePurchaseTickets (json jsonPayload) (http:Response res) {
     // Get the ticket information // Improve the string conversion
     var b = con:getTicket(c.eventId + "");
 
-    var tick, ticketId = util:getTicketByType(b, c.ticket_type);
+    var (tick, ticketId) = util:getTicketByType(b, c.ticket_type);
 
     if (tick == null) {
         // There is no matching type, Lets throw a error
@@ -93,13 +95,16 @@ public function handlePurchaseTickets (json jsonPayload) (http:Response res) {
         return;
     }
 
-    var gateWayRes, gwStatus = con:makePayment(jsonPayload);
-
-    if (gwStatus != 200) {
-        res.setJsonPayload(gateWayRes);
-        res.statusCode = gwStatus;
-        return;
+    error|null response = con:makePayment(jsonPayload);
+    match response {
+        error paymentErr => {
+            res.setJsonPayload(util:generateJsonFromError(paymentErr));
+            res.statusCode = 500;
+            return res;
     }
+        null => {io:println("Payment success!!");}
+}
+
 
     // If reached Payment is successfull. Deduct the ticket count
     var tickUpdateRes = con:updateTicket(ticketId, c.noOfTickets);
