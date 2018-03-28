@@ -1,22 +1,22 @@
 package event.handler.persistence;
 
-import ballerina.data.sql;
-import ballerina.io;
-import ballerina.test;
+import ballerina/data.sql;
+import ballerina/io;
+import ballerina/test;
 
 // These tests cover the following functionality of testerina
 // BeforeEach tests, AfterEach tests
 
-@Description {value:"Before and After functions used to setup prerequisites"}
-@test:beforeEach
+@Description {value:"BeforeEach function used to setup prerequisites, here we are clearing the DB table"}
+@test:BeforeEach
 function truncateTable () {
 
     io:println("Before Each Function");
     // Truncate the table to make sure data doesn't exist.
-    var a = dbEP -> update("TRUNCATE TABLE " + tableName, null);
+    var a =? dbEP -> update("TRUNCATE TABLE " + tableName, null);
 }
 
-@test:afterEach
+@test:AfterEach
 function truncateTableAfter () {
     // Calling the same before function since We just need to truncate the table
     truncateTable();
@@ -25,7 +25,7 @@ function truncateTableAfter () {
 
 @Description {value:"Tests adding events to the EVENTS table"}
 @Description {value:"This test used a before and a after function to cleanup the DB"}
-@test:config
+@test:Config
 public function testAddEventToDB () {
 
     mod:Event event = {
@@ -35,14 +35,22 @@ public function testAddEventToDB () {
                           organizer_name:"tyler"
                       };
 
-    var pl, err = addNewEvent(event);
-    test:assertEquals(err, null, msg = "There was a error when adding Event to the DB.");
+    var pl = addNewEvent(event);
+    match pl {
+        json j => {
+            io:println("No Error occured");
+            test:assertTrue(j.Success.toString() == "Ballerina event is Created");
+        }
+        error err => {
+            test:assertFail(msg = "Error occured while adding a Event");
+        }
+    }
 
-    // Asserting the DB
-    table dt = dbEP -> select("SELECT * FROM " + tableName + " WHERE NAME = 'Ballerina'", null, null);
-    var jsonResult, err2 = <json>dt;
+    // Asserting the DB Entry
+    table dt =? dbEP -> select("SELECT * FROM " + tableName + " WHERE NAME = 'Ballerina'", null, null);
+    var jsonResult =? <json>dt;
 
-    test:assertEquals(err2, null, msg = "There was a error when Querying the DB.");
+    //test:assertEquals(err2, null, msg = "There was a error when Querying the DB.");
     json result = jsonResult[0];
 
     // Asserting results
@@ -59,7 +67,7 @@ public function testAddEventToDB () {
 
 
 @Description {value:"Tests adding duplicate events to the EVENTS table"}
-@test:config
+@test:Config
 public function testAddDuplicateEventToDB () {
     // Sql connector to check whether the data is present in the database
     mod:Event event = {
@@ -69,14 +77,32 @@ public function testAddDuplicateEventToDB () {
                           organizer_name:"tyler"
                       };
 
-    var pl, err = addNewEvent(event);
-    test:assertEquals(err, null, msg = "There was a error when adding Event to the DB.");
-    var pl2, err2 = addNewEvent(event);
-    test:assertNotEquals(err2, null, msg = "Error was expected");
+    var pl = addNewEvent(event);
+    match pl {
+    error err => {
+        test:assertFail(msg = "Error occured while adding a new event");
+    }
+    json j => {
+        io:println(j);
+    }
+}
+
+    var pl2 = addNewEvent(event);
+    match pl2 {
+        error err => {
+            io:println(err.message);
+            // Asserting the error message
+            test:assertEquals(err.message , "Event Already Exists");
+        }
+        json j => {
+            io:println(j);
+            test:assertFail(msg = "Error Didn't occur when adding a duplicate event.");
+        }
+    }
 }
 
 @Description {value:"Tests adding a invalid events to the EVENTS table"}
-@test:config
+@test:Config
 public function testAddInvalidEventToDB () {
     // Sql connector to check whether the data is present in the database
     mod:Event event = {
@@ -87,24 +113,24 @@ public function testAddInvalidEventToDB () {
                       };
     // Negative test which expects a error
     try {
-        var pl, err = addNewEvent(event);
+        var pl =? addNewEvent(event);
         test:assertFail(msg = "No Error occured while adding a invalid entry");
     } catch (error e) {}
 }
 
 @Description {value:"Tests adding a invalid events to the EVENTS table"}
-@test:config
+@test:Config
 public function testAddInvalidVenueToDB () {
-    // Sql connector to check whether the data is present in the database
+
     mod:Event event = {
                           name:"Ballerina",
                           start_time:"12.55",
-                          venue:"WSO2123456789", // Feild only can have 10 characters
+                          venue:"WSO2123456789", // Fail only can have 10 characters
                           organizer_name:"tyler"
                       };
     // Negative test which expects a error
     try {
-        var pl, err = addNewEvent(event);
+        var pl =? addNewEvent(event); // This line will throw an error and it wil be caught
         test:assertFail(msg = "No Error occured while adding a invalid entry");
     } catch (error e) {
         io:println(e);

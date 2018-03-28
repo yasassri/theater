@@ -1,9 +1,9 @@
 package tests;
 
-import ballerina.test;
-import ballerina.net.http;
-import ballerina.io;
-import ballerina.data.sql;
+import ballerina/test;
+import ballerina/net.http;
+import ballerina/io;
+import ballerina/data.sql;
 
 
 const string h2DbLocation = "./";
@@ -11,15 +11,17 @@ const string h2Database = "EVENTS";
 string eventServiceEp;
 string addedEventID;
 
-public endpoint<sql:Client> dbEP2 { database: sql:DB.H2_FILE, host: h2DbLocation,port: 0,name: h2Database,username: "root",password: "root"}
+public endpoint sql:Client dbEP2 { database: sql:DB.H2_FILE, host: h2DbLocation,name: h2Database};
 
 @Description {value: "Before function to start the service"}
-@test:beforeSuite
+@test:BeforeSuite
 function startaEventService() {
     // Starting the EventDataService
-    eventServiceEp = test:startService("eventsDataService");
+    boolean x = test:startServices("event.handler.services");
+    io:println("=========");
+    io:println(x);
     // Starting the service will initialize the DB in this sample app.
-    eventServiceEp= "http://localhost:9093/events";
+    eventServiceEp = "http://localhost:9093/events";
     io:println(eventServiceEp);
 }
 
@@ -29,14 +31,14 @@ function truncateTable () {
     var a = dbEP2 -> update("TRUNCATE TABLE EVENTS", null);
 }
 
-
-@test:config {
+@test:Config {
     before: "truncateTable"
 }
 function testAddEventWithValidPayload () {
     // HTTP endpoint to call event service
-    endpoint<http:Client> httpEndpoint { serviceUri: eventServiceEp }
-
+    endpoint http:ClientEndpoint httpEndpoint {
+        targets: [{uri:eventServiceEp}]
+    };
 
     json addEventPl = {
                           "name": "Ballerina",
@@ -47,27 +49,27 @@ function testAddEventWithValidPayload () {
                       };
     http:Request req = {};
     req.setJsonPayload(addEventPl);
-    var resp, err1 = httpEndpoint -> post("/add", req);
-    var p, err2 = resp.getJsonPayload();
-    test:assertEquals(err2, null, msg = "Error while getting the Json payload");
+    var resp =? httpEndpoint -> post("/add", req);
+    var p =? resp.getJsonPayload();
+    //test:assertEquals(err2, null, msg = "Error while getting the Json payload");
     addedEventID = p.id.toString();
     test:assertTrue(p.toString().contains("\"Success\":\"Ballerina event is Created\""), msg = "Payload didn't match");
 }
 
 // If you want to guarantee that a particular test should be executed before this test we can use dependsOn attribute
 @Description {value: "Test Get events"}
-@test:config {
+@test:Config {
     dependsOn: ["testAddEventWithValidPayload"]
 }
 function testGetEventService () {
     // HTTP endpoint to call event service
-  endpoint<http:Client> httpEndpoint {
-        serviceUri: eventServiceEp
-    }
+    endpoint http:ClientEndpoint httpEndpoint {
+        targets: [{uri:eventServiceEp}]
+    };
 
     http:Request req = {};
-    var resp, ex = httpEndpoint -> get("/get", req);
-    var p, err = resp.getJsonPayload();
+    var resp =? httpEndpoint -> get("/get", req);
+    var p =? resp.getJsonPayload();
 
     if (p[0].ID != null) {
         test:assertEquals(p[0].ID.toString(), addedEventID, msg = "Event IDs didn't match" );
@@ -75,8 +77,9 @@ function testGetEventService () {
 }
 
 @Description {value: "Stop the service"}
-@test:afterSuite
+@test:AfterSuite
 function stopEventService() {
     // Starting the service will initialize the DB in this sample app.
+    test:stopServices("event.handler.services");
     io:println("Stopping the service!");
 }

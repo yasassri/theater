@@ -16,8 +16,7 @@ public function addNewEvent(mod:Event event) returns json | error {
 
     // First Check if existing event is present.
     var existingID =? getEventIDByName(event.name);
-    io:println(existingID);
-    if (!existingID.equalsIgnoreCase("0")) {
+    if (!existingID.equalsIgnoreCase("")) {
         error err = {message:"Event Already Exists"};
         return err;
     }
@@ -30,19 +29,11 @@ public function addNewEvent(mod:Event event) returns json | error {
             return err;
         }
         int res => {
+            existingID =? getEventIDByName(event.name);
             json jsonResponse = {"Success":event.name + " event is Created", "id" : existingID };
             return jsonResponse;
         }
     }
-}
-
-public function main (string [] q) {
-    _ = foo("");
-}
-
-function foo (string n) returns string | error {
-error e;
-    return e;
 }
 
  //Get the event ID by Name
@@ -55,7 +46,6 @@ sql:Parameter[] params = [];
 sql:Parameter para1 = {sqlType:sql:Type.VARCHAR,value:name};
 params = [para1];
 var dt2 = dbEP -> select("SELECT ID FROM " + tableName + " WHERE NAME = ?", params, null);
-    io:println(typeof dt2);
 match dt2 {
     table tbl => {
         var jsonRes =? <json>tbl;
@@ -66,33 +56,30 @@ match dt2 {
         return id;
     }
     sql:SQLConnectorError err => {
-        io:println();
+        io:println("Error Occured");
         return err;
     }
 }
-// If a error occured propagating the error along caller stack
 }
 
 // Get all events
 public function getAllEvents() returns json | error {
 
-    //var dt = dbEP -> select(getAllEventsQuery, null, null);
-    //match dt {
-    //    error err => {
-    //        return err;
-    //    }
-    //    table tbl => {
-    //
-    //        var res = <json>tbl;
-    //        match res {
-    //            json js => {
-    //                return js;
-    //            }
-    //            error err => {
-    //                return err;
-    //            }
-    //        }
-    //    }
-    //}
-    return "";
+    var dt = dbEP -> select(getAllEventsQuery, null, null);
+    match dt {
+        error err => {
+            return err;
+        }
+        table tbl => {
+            var res = <json>tbl;
+            match res {
+                json js => {
+                    return js;
+                }
+                error err => {
+                    return err;
+                }
+            }
+        }
+    }
 }

@@ -12,21 +12,18 @@ public function handleGetAllEventRequest (http:Request req) returns http:Respons
 
     http:Response res = {};
     var events = persist:getAllEvents();
-    //match events {
-    //    json payload => {
-    //        res.setJsonPayload(payload);
-    //        res.statusCode = 200;
-    //        return res;
-    //    }
-    //    error err => {
-    //        res.setJsonPayload(util:generateJsonFromError(err));
-    //        res.statusCode = 500;
-    //        return res;
-    //    }
-    //}
-    res.setJsonPayload(events);
-    res.statusCode = 200;
-    return res;
+    match events {
+        json payload => {
+            res.setJsonPayload(payload);
+            res.statusCode = 200;
+            return res;
+        }
+        error err => {
+            res.setJsonPayload(util:generateJsonFromError(err));
+            res.statusCode = 500;
+            return res;
+        }
+    }
 }
 
 // Service implementation to handle get service request
@@ -34,17 +31,33 @@ public function handleGetAllEventRequest (http:Request req) returns http:Respons
 public function handleAddEvent (json jsonPayload) returns http:Response {
 
     http:Response res = {};
-    var event =? <mod:Event> jsonPayload;
-    //match event {
-    //    json jEvent => {io:println("");}
-    //    error err => {
-    //        res.setJsonPayload(util:generateJsonFromError(err));
-    //        res.statusCode = 500;
-    //        return res;
-    //        }
-    //}
+    mod:Event evt = {};
+    error|null validateError = util:validateEventRequest(jsonPayload);
+    match validateError {
+    error vErr => {
+        res.setJsonPayload(util:generateJsonFromError(vErr));
+        res.statusCode = 500;
+        return res;
+    }
+    null => {
+    io:println("Message was validated successfully");
+    }
+}
 
-    var persistResult = persist:addNewEvent(event);
+    var event = <mod:Event> jsonPayload;
+    match event {
+        mod:Event evnt => {
+            io:println("No Issue when converting");
+            evt = evnt;
+        }
+        error err => {
+            res.setJsonPayload(util:generateJsonFromError(err));
+            res.statusCode = 500;
+            return res;
+        }
+    }
+
+    var persistResult = persist:addNewEvent(evt);
     match persistResult {
         json payload => {
             res.setJsonPayload(payload);

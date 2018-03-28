@@ -6,8 +6,8 @@ import ballerina/test;
 import event.handler.model as mod;
 
 @Description {value:"This is a mock function"}
-@test:mock {
-    packageName:"src.persistence",
+@test:Mock {
+    packageName:"event.handler.persistence",
     functionName:"addNewEvent"
 }
 function mockAddNewEvent (mod:Event evnt) returns json | error {
@@ -24,7 +24,7 @@ function mockAddNewEvent (mod:Event evnt) returns json | error {
 }
 
 @Description {value:"Tests valid Payload for Event add request"}
-@test:config {}
+@test:Config
 function testValidPayload () {
 
     json addEventPayLoad = {
@@ -38,10 +38,9 @@ function testValidPayload () {
 
     http:Response res = handleAddEvent(addEventPayLoad);
 
+    // If a error occurs while getting the Json payload a error will be thrown and it will fail the test
     var jsonPayload =? res.getJsonPayload();
 
-    // Check whether there is an Error when getting the payload
-    test:assertEquals(err, null, msg = "There was an error when getting the JsonPayload");
     // Assert the payload
     test:assertEquals(jsonPayload, actualResponse, msg = "Response Didn't match");
 
@@ -51,7 +50,7 @@ function testValidPayload () {
 
 
 @Description {value:"Tests invalid Payload for Event add request"}
-@test:config {}
+@test:Config {}
 function testInvalidPayload () {
 
     json addEventPayLoad = {
@@ -64,9 +63,9 @@ function testInvalidPayload () {
     http:Response res = {};
     res = handleAddEvent(addEventPayLoad);
     var jsonPayload =? res.getJsonPayload();
+    io:println("xxxxxxmmmmm-----------");
+    io:println(jsonPayload);
 
-    // Check whether there is an Error when getting the payload
-    test:assertEquals(err, null, msg = "There was an error when getting the JsonPayload");
     // Assert the response code
     test:assertEquals(res.statusCode, 500, msg = "Response Didn't match");
     test:assertTrue(jsonPayload.toString().contains("There was a Error"),msg = "Response didn't match");
@@ -74,7 +73,7 @@ function testInvalidPayload () {
 
 
 @Description {value:"Tests error returned from addNewEvent"}
-@test:config {}
+@test:Config {}
 function testErrorReturnedFromDb () {
 
     json addEventPayLoad = {
@@ -89,7 +88,7 @@ function testErrorReturnedFromDb () {
     http:Response res = {};
     res = handleAddEvent(addEventPayLoad);
     var jsonPayload =? res.getJsonPayload();
-    test:assertEquals(err, null, msg = "There was an error when getting the JsonPayload");
+
     // Assert the payload
     test:assertEquals(jsonPayload, actualResponse, msg = "Response Didn't match");
     // Assert the response code

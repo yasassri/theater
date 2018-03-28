@@ -1,9 +1,9 @@
 package event.handler.model;
 
-import ballerina.test;
+import ballerina/test;
 
 @Description {value: "Test creating and retriving values from a struct"}
-@test:config {}
+@test:Config
 public function testEventModel () {
 
    Event event =  {
