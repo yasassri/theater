@@ -1,6 +1,7 @@
 package portal.services;
 
-import ballerina.net.http;
+import ballerina/net.http;
+
 import portal.serviceImpl as impl;
 
 
@@ -28,7 +29,7 @@ service<http:Service> PortalService bind portalEP {
     }
      addTickets (endpoint conn, http:Request req) {
 
-        var jsonPayload, _ = req.getJsonPayload();
+        var jsonPayload =? req.getJsonPayload();
         _ = conn -> forward(impl:handleAddTickets(jsonPayload));
     }
 
@@ -47,10 +48,8 @@ service<http:Service> PortalService bind portalEP {
     }
      buyTickets (endpoint conn, http:Request req) {
 
-        var jsonPayload, _ = req.getJsonPayload();
+        var jsonPayload =? req.getJsonPayload();
         var a = impl:handlePurchaseTickets(jsonPayload);
-        // json jsonRes = ops:addTicketCountByEventId();
-        // res.setJsonPayload(jsonRes);
         _ = conn -> forward(a);
     }
 }

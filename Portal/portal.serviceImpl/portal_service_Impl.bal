@@ -20,20 +20,28 @@ public function hadleGetEvents () returns (http:Response) {
 public function handleAddTickets (json jsonPayload) returns (http:Response) {
 
     http:Response res = {};
+    // TODO Add a validate payload function here
     var payLoad =? <mod:AddEvent>jsonPayload;
 
     // Now we need to extract event part from the Payload.
     json event = util:generateEventRequest(payLoad);
 
-    // Extact ticket information
+    // Extract ticket information
     var tickets = payLoad.tickets;
 
     // Add the event first
     var status = con:addEvent(event);
+    json resp = "";
     match status {
-        error addEvnterr => {}
-        json resp => {
-
+        error addEvnterr => {
+            res.statusCode = 500;
+            res.setJsonPayload(util:generateJsonFromError(addEvnterr));
+            return res;
+        }
+        json resp1 => {
+            resp = resp1;
+        }
+    }
     // Extracting the Event ID from the response
     var i =? <int>resp.id.toString();
     // Now add the tickets.
@@ -50,49 +58,66 @@ public function handleAddTickets (json jsonPayload) returns (http:Response) {
         var addTicketres = con:addTicket(js2);
     }
 
-    // To-DO: If ticket adding fails the event should be rolled back
+    // TODO: If ticket adding fails the event should be rolled back
     res.setJsonPayload(resp);
     return res;
     }
-}
-
-}
 
 public function handleGetTickets (string id) returns (http:Response) {
     http:Response res = {};
     var a = con:getTicket(id);
-    res.setJsonPayload(a);
-    return;
+    match a {
+        json j => {
+        res.setJsonPayload(j);
+        res.statusCode = 200;
+    }
+        error err => {
+        res.setJsonPayload(util:generateJsonFromError(err));
+        res.statusCode = 500;
+    }
+    }
+    return res;
 }
 
 
 public function handlePurchaseTickets (json jsonPayload) returns (http:Response) {
     http:Response res = {};
     var c =? <mod:PurchaseTicket>jsonPayload;
-    if (err != null) {
-        res.setJsonPayload(err.message);
-        return;
-    }
+    // Validate the purchase ticket request
+    //if (err != null) {
+    //    res.setJsonPayload(err.message);
+    //    return;
+    //}
     // Get the ticket information // Improve the string conversion
-    var b = con:getTicket(c.eventId + "");
+    var b =? con:getTicket(c.eventId + "");
 
-    var (tick, ticketId) = util:getTicketByType(b, c.ticket_type);
-
-    if (tick == null) {
-        // There is no matching type, Lets throw a error
-        error er = {message:"No Matching Ticket Type found"};
-        res.statusCode = 500;
-        res.setJsonPayload(util:generateJsonFromError(er));
-        return;
-    }
-
+    (mod:Ticket, int) | null ret = util:getTicketByType(b, c.ticket_type);
+    mod:Ticket tick = {};
+    int tId;
+    match ret {
+        (mod:Ticket, int) x => {
+            (tick, tId) = x;
+        }
+        null => {
+    io:println("5");
+            // There is no matching type, Lets throw a error
+            error er = {message:"No Matching Ticket Type found"};
+            res.statusCode = 500;
+            res.setJsonPayload(util:generateJsonFromError(er));
+            return res;
+        }
+}
     //Check whether we have enough tickets
+io:println("XXXXXXX");
+io:println(c.noOfTickets);
+io:println(tick.total);
+io:println(tick);
     if (c.noOfTickets > tick.total - tick.booked) {
         // Not enough tickets
         error er = {message:"The ammount you requested not available."};
         res.statusCode = 500;
         res.setJsonPayload(util:generateJsonFromError(er));
-        return;
+        return res;
     }
 
     error|null response = con:makePayment(jsonPayload);
@@ -105,11 +130,10 @@ public function handlePurchaseTickets (json jsonPayload) returns (http:Response)
         null => {io:println("Payment success!!");}
 }
 
-
-    // If reached Payment is successfull. Deduct the ticket count
-    var tickUpdateRes = con:updateTicket(ticketId, c.noOfTickets);
+//    // If reached Payment is successfull. Deduct the ticket count
+    var tickUpdateRes =? con:updateTicket(tId, c.noOfTickets);
 
     res.setJsonPayload(tickUpdateRes);
     res.statusCode = 200;
-    return;
+    return res;
 }

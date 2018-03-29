@@ -17,7 +17,9 @@ public function addEvent (json payload) returns json | error {
     match response {
         http:Response resp =>  {
             if (resp.statusCode != 200) {
-                error err = {message : resp.statusCode };
+                json js =? resp.getJsonPayload();
+                io:println(js);
+                error err = {message : js.toString() };
                 return err;
                   }
             var js = resp.getJsonPayload();
